@@ -9,7 +9,7 @@ Deux dés à six faces, une somme de 2 à 12. On mise sur **Under 7**, **Sept ex
 
 Ouvrir `index.html` (ou `node ../tools/serve.js 8080` puis `/under-over-seven/`).
 
-1. Choisir un jeton (10 / 50 / 100 / 500 / 1 000 €) dans le panneau.
+1. Choisir un jeton (10 / 50 / 100 / 500 / 1 000 FCFA) dans le panneau.
 2. Cliquer une zone du tapis : chaque clic ajoute le jeton à cette zone.
 3. Le tirage part automatiquement à la fin du compte à rebours (9 s), ou tout de suite
    avec **Lancer les dés**.

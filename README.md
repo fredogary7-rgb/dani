@@ -8,6 +8,9 @@ un **Crash** (courbe + avion) et un **Under / Over 7** (deux dés).
 > Jouer de l'argent réel sur un site non agréé ANJ est illégal en France et prive de
 > toute protection. 18+.
 
+**Devise : franc CFA (XOF)**, sans sous-unité — les montants sont arrondis à l'unité
+(1 000 FCFA au départ).
+
 ## Lancer
 
 ```bash

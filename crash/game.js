@@ -49,9 +49,9 @@
   };
 
   // ---------- Formatage ----------
-  const nf2 = new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  // Devise : franc CFA (XOF). Pas de sous-unité -> tout est arrondi à l'unité.
   const nf0 = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
-  const money = (v) => nf2.format(v) + ' €';
+  const money = (v) => nf0.format(Math.round(v)) + ' FCFA';
   const mult = (v) => v.toFixed(2) + '×';
   const round2 = (v) => Math.round(v * 100) / 100;
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -117,7 +117,7 @@
   }
 
   function setBalance(v) {
-    S.balance = round2(Math.max(0, v));
+    S.balance = Math.round(Math.max(0, v));
     ui.balance.textContent = money(S.balance);
     saveBalance();
   }
@@ -850,8 +850,8 @@
     const bet = S.bet;
     if (!bet || bet.cashedOut) return;
     const m = atMult || S.mult;
-    const win = round2(bet.amount * m);
-    const net = round2(win - bet.amount);
+    const win = Math.round(bet.amount * m);
+    const net = win - bet.amount;
     bet.cashedOut = true;
     bet.winAt = m;
     setBalance(S.balance + win);

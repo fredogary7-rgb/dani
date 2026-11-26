@@ -117,8 +117,8 @@ function log(ok, label, detail) {
   const stakeUnder = await evaluate("document.querySelector('#stake-under').textContent");
   const total = await evaluate("document.querySelector('#stake-total').textContent");
   log(balance === 900, 'débit de 100 €', balance);
-  log(/100,00/.test(stakeUnder), 'mise affichée sur la zone', stakeUnder);
-  log(/100,00/.test(total), 'total engagé', total);
+  log(/100\s*FCFA/.test(stakeUnder), 'mise affichée sur la zone', stakeUnder);
+  log(/100\s*FCFA/.test(total), 'total engagé', total);
 
   console.log('\n--- Lancer ---');
   await evaluate("document.querySelector('#roll-btn').click()");
@@ -163,7 +163,7 @@ function log(ok, label, detail) {
   const nextRound = await waitFor("document.querySelector('#phase-tag').textContent==='Paris ouverts'", 8000);
   log(nextRound, 'nouvelle manche ouverte');
   const totalAfter = await evaluate("document.querySelector('#stake-total').textContent");
-  log(/^0,00/.test(totalAfter), 'mises remises à zéro', totalAfter);
+  log(/^0\s*FCFA/.test(totalAfter), 'mises remises à zéro', totalAfter);
 
   const before = await balanceOf();
   await evaluate("document.querySelector('.zone-over').click()");

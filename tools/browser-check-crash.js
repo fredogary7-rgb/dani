@@ -117,12 +117,12 @@ function log(ok, label, detail) {
   await sleep(150);
   let balance = await evaluate("document.querySelector('#balance').textContent");
   let main = await evaluate("document.querySelector('#action-main').textContent");
-  log(/950,00/.test(balance), 'débit de la mise', balance);
+  log(/950\s*FCFA/.test(balance), 'débit de la mise', balance);
   log(/ANNULER/i.test(main), 'bouton passe en annulation', main);
   await evaluate("document.querySelector('#action-btn').click()");
   await sleep(150);
   balance = await evaluate("document.querySelector('#balance').textContent");
-  log(/1\s?000,00/.test(balance), 'remboursement', balance);
+  log(/1\s?000\s*FCFA/.test(balance), 'remboursement', balance);
 
   console.log('\n--- Retrait pendant le vol ---');
   let flightOk = false;
@@ -140,7 +140,18 @@ function log(ok, label, detail) {
       continue;
     }
     log(true, 'le vol démarre', await evaluate("document.querySelector('#stage-foot-left').textContent"));
-    await sleep(400);
+
+    // Le bouton doit basculer en « Retirer » dès le décollage ; sinon la manche
+    // a crashé trop vite (crash < 1,02×) et on retente.
+    const cashReady = await waitFor(
+      "/^Retirer/.test(document.querySelector('#action-main').textContent) && parseFloat(document.querySelector('#multiplier em').textContent) >= 1.05",
+      3000
+    );
+    if (!cashReady) {
+      console.log('  ...  manche trop courte, nouvelle tentative');
+      await waitFor("document.querySelector('#phase-tag').textContent==='En attente'", 15000);
+      continue;
+    }
 
     const multText = await evaluate("document.querySelector('#multiplier em').textContent");
     const cashLabel = await evaluate("document.querySelector('#action-main').textContent");
