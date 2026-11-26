@@ -37,6 +37,9 @@ plus défavorable que le Crash. C'est le propre des paris « secs » à un lance
   issue, mise, gain/perte), KPI (Under/Sept/Over, RTP et net observés), histogramme des
   sommes 2 → 12 comparé à la théorie. Alimentée en direct par le jeu (localStorage), elle
   se rafraîchit toute seule et se met à jour si une autre fenêtre joue.
+- **Tableau d'affichage** (`board.html`) : page dédiée, plein écran, avec le dernier tirage
+  en très grand noté **−7 / 7 / +7**, les compteurs et séries par issue, la bande des
+  40 derniers tirages et les probabilités du prochain tirage (fixes, non prédictives).
 - Phase de résultat : somme géante colorée, zone gagnante illuminée, zones perdantes
   atténuées, message « Gagné / Perdu », sons de dés (secousses + impacts) et de gain
 - Solde persistant (`localStorage`), bouton ↺ pour réinitialiser, clavier espace / Entrée
@@ -50,4 +53,7 @@ game.js      moteur : tirage crypto, dés 3D, manches, paiements, sons, journal 
 results.html page « Résultats » (journal + statistiques)
 results.css  styles de la page de résultats
 results.js   lecture du journal (localStorage) et rendu des stats
+board.html   tableau d'affichage −7 / 7 / +7 (dernier tirage en grand + séries)
+board.css    styles du tableau
+board.js     rendu temps réel du tableau
 ```

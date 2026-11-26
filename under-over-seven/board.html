@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Under / Over 7 — tableau des résultats</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="board.css">
+</head>
+<body class="board-body">
+<div class="app board-app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">UNDER <em>/</em> OVER 7</span>
+      <span class="brand-sub">tableau des résultats</span>
+    </div>
+    <div class="topbar-right">
+      <span class="live-pill" id="live">hors ligne</span>
+      <a class="ghost-btn" href="index.html" title="Retour au jeu">← Jouer</a>
+      <a class="ghost-btn" href="results.html" title="Journal détaillé">Détail</a>
+    </div>
+  </header>
+
+  <!-- ---------- Dernier tirage ---------- -->
+  <section class="hero" id="hero">
+    <span class="hero-label">Dernier tirage</span>
+    <strong class="hero-sign" id="hero-sign">—</strong>
+    <span class="hero-sub" id="hero-sub">aucun tirage enregistré</span>
+    <span class="hero-time" id="hero-time"></span>
+  </section>
+
+  <!-- ---------- Compteurs ---------- -->
+  <section class="cols">
+    <article class="col col-under" data-outcome="under">
+      <header><span class="col-sign">−7</span><span class="col-name">Moins de 7</span></header>
+      <strong class="col-count" id="count-under">0</strong>
+      <div class="col-bar"><span id="bar-under"></span></div>
+      <dl>
+        <div><dt>part</dt><dd id="pct-under">0 %</dd></div>
+        <div><dt>série en cours</dt><dd id="streak-under">0</dd></div>
+        <div><dt>meilleure série</dt><dd id="best-under">0</dd></div>
+        <div><dt>dernière fois</dt><dd id="last-under">—</dd></div>
+      </dl>
+    </article>
+
+    <article class="col col-seven" data-outcome="seven">
+      <header><span class="col-sign">7</span><span class="col-name">Sept exact</span></header>
+      <strong class="col-count" id="count-seven">0</strong>
+      <div class="col-bar"><span id="bar-seven"></span></div>
+      <dl>
+        <div><dt>part</dt><dd id="pct-seven">0 %</dd></div>
+        <div><dt>série en cours</dt><dd id="streak-seven">0</dd></div>
+        <div><dt>meilleure série</dt><dd id="best-seven">0</dd></div>
+        <div><dt>dernière fois</dt><dd id="last-seven">—</dd></div>
+      </dl>
+    </article>
+
+    <article class="col col-over" data-outcome="over">
+      <header><span class="col-sign">+7</span><span class="col-name">Plus de 7</span></header>
+      <strong class="col-count" id="count-over">0</strong>
+      <div class="col-bar"><span id="bar-over"></span></div>
+      <dl>
+        <div><dt>part</dt><dd id="pct-over">0 %</dd></div>
+        <div><dt>série en cours</dt><dd id="streak-over">0</dd></div>
+        <div><dt>meilleure série</dt><dd id="best-over">0</dd></div>
+        <div><dt>dernière fois</dt><dd id="last-over">—</dd></div>
+      </dl>
+    </article>
+  </section>
+
+  <!-- ---------- Bande de résultats ---------- -->
+  <section class="strip-block">
+    <div class="strip-head">
+      <h2>40 derniers tirages</h2>
+      <span id="total-label">0 tour</span>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="strip-empty" id="strip-empty">
+      Aucun tirage pour l'instant — lance une manche dans le jeu, le tableau se remplit tout seul.
+    </div>
+  </section>
+
+  <!-- ---------- Prochain tirage ---------- -->
+  <section class="next">
+    <div class="next-head">
+      <h2>Prochain tirage</h2>
+      <span class="next-tag">indépendant de l'historique</span>
+    </div>
+    <div class="next-bars">
+      <div class="next-row next-under">
+        <span class="next-sign">−7</span>
+        <div class="next-track"><span style="width:41.67%"></span></div>
+        <strong>41,67 %</strong>
+      </div>
+      <div class="next-row next-seven">
+        <span class="next-sign">7</span>
+        <div class="next-track"><span style="width:16.67%"></span></div>
+        <strong>16,67 %</strong>
+      </div>
+      <div class="next-row next-over">
+        <span class="next-sign">+7</span>
+        <div class="next-track"><span style="width:41.67%"></span></div>
+        <strong>41,67 %</strong>
+      </div>
+    </div>
+    <p class="next-note">
+      Ces probabilités sont fixes (15/36 · 6/36 · 15/36) et ne dépendent <strong>jamais</strong> des
+      tirages précédents : une série de « −7 » n'augmente pas les chances de « +7 » (illusion du
+      joueur). Espérance de retour : 83,3 %.
+    </p>
+  </section>
+
+  <footer class="footer">
+    Tableau privé alimenté par les manches réellement jouées (journal local). Aucune prédiction
+    n'est possible ni proposée. Démo, argent fictif.
+  </footer>
+</div>
+<script src="board.js"></script>
+</body>
+</html>

@@ -54,6 +54,8 @@ Deux dés à six faces, somme de 2 à 12.
 - Math : RTP = 15/36 × 2 = 6/36 × 5 = **83,33 %** (avantage maison 16,67 %)
 - **Page « Résultats »** : `/under-over-seven/results.html` — journal exact des tours
   (dés, somme, issue, mise, gain/perte), KPI et histogramme des sommes comparé à la théorie
+- **Tableau d'affichage** : `/under-over-seven/board.html` — dernier tirage en très grand
+  noté **−7 / 7 / +7**, compteurs et séries par issue, 40 derniers tirages
 
 ## Structure
 

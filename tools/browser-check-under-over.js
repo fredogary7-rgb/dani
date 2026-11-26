@@ -197,6 +197,25 @@ function log(ok, label, detail) {
     fs.writeFileSync(path.join(__dirname, 'uo-results.png'), Buffer.from(shotRes.result.data, 'base64'));
   }
 
+  console.log('\n--- Tableau des résultats ---');
+  await send('Page.navigate', { url: PAGE + 'board.html' });
+  await sleep(900);
+
+  const heroSign = await evaluate("document.querySelector('#hero-sign').textContent");
+  const heroSub = await evaluate("document.querySelector('#hero-sub').textContent");
+  const pills = await evaluate("document.querySelectorAll('#strip .pill').length");
+  const countUnder = await evaluate("document.querySelector('#count-under').textContent");
+  const expectedSign = sum < 7 ? '−7' : sum === 7 ? '7' : '+7';
+  log(heroSign === expectedSign, 'signe du dernier tirage', heroSign + ' (attendu ' + expectedSign + ')');
+  log(/somme \d+ · dés \d \+ \d/.test(String(heroSub)), 'détail « dés + somme »', heroSub);
+  log(pills === 1, 'bande des tirages', pills + ' pastille(s)');
+  log(Number(countUnder) === (sum < 7 ? 1 : 0), 'compteur −7', countUnder);
+
+  const shotBoard = await send('Page.captureScreenshot', { format: 'png' });
+  if (shotBoard.result && shotBoard.result.data) {
+    fs.writeFileSync(path.join(__dirname, 'uo-board.png'), Buffer.from(shotBoard.result.data, 'base64'));
+  }
+
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');
 
