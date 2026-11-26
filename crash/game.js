@@ -17,9 +17,9 @@
     minBet: 10,
     maxBet: 250000,
     maxMultiplier: 5000,
-    startBalance: 1000,
+    startBalance: 1000000,
     maxHistory: 14,
-    storageKey: 'crash-demo-v1',
+    storageKey: 'crash-demo-v2',
   };
 
   const $ = (sel) => document.querySelector(sel);

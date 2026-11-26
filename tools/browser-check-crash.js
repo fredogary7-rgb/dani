@@ -117,12 +117,12 @@ function log(ok, label, detail) {
   await sleep(150);
   let balance = await evaluate("document.querySelector('#balance').textContent");
   let main = await evaluate("document.querySelector('#action-main').textContent");
-  log(/950\s*FCFA/.test(balance), 'débit de la mise', balance);
+  log(/999\s?950\s*FCFA/.test(balance), 'débit de la mise', balance);
   log(/ANNULER/i.test(main), 'bouton passe en annulation', main);
   await evaluate("document.querySelector('#action-btn').click()");
   await sleep(150);
   balance = await evaluate("document.querySelector('#balance').textContent");
-  log(/1\s?000\s*FCFA/.test(balance), 'remboursement', balance);
+  log(/1\s?000\s?000\s*FCFA/.test(balance), 'remboursement', balance);
 
   console.log('\n--- Retrait pendant le vol ---');
   let flightOk = false;

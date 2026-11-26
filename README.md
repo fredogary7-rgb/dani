@@ -9,7 +9,7 @@ un **Crash** (courbe + avion) et un **Under / Over 7** (deux dés).
 > toute protection. 18+.
 
 **Devise : franc CFA (XOF)**, sans sous-unité — les montants sont arrondis à l'unité
-(1 000 FCFA au départ).
+(**1 000 000 FCFA** de solde de départ, remis à zéro avec le bouton ↺).
 
 ## Lancer
 

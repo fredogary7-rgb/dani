@@ -108,7 +108,7 @@ function log(ok, label, detail) {
   log(chips === 8, 'historique de 8 sommes', chips);
   log(/^\d+x\d+$/.test(String(canvasSize)), 'canvas dimensionné', canvasSize);
   log(phase === 'Paris ouverts', 'phase initiale', phase);
-  log((await balanceOf()) === 1000, 'solde initial', await balanceOf());
+  log((await balanceOf()) === 1000000, 'solde initial', await balanceOf());
 
   console.log('\n--- Mise sur Under 7 ---');
   await evaluate("document.querySelector('.zone-under').click()");
@@ -116,7 +116,7 @@ function log(ok, label, detail) {
   let balance = await balanceOf();
   const stakeUnder = await evaluate("document.querySelector('#stake-under').textContent");
   const total = await evaluate("document.querySelector('#stake-total').textContent");
-  log(balance === 900, 'débit de 100 €', balance);
+  log(balance === 999900, 'débit de 100 FCFA', balance);
   log(/100\s*FCFA/.test(stakeUnder), 'mise affichée sur la zone', stakeUnder);
   log(/100\s*FCFA/.test(total), 'total engagé', total);
 
@@ -145,7 +145,7 @@ function log(ok, label, detail) {
   log(winZone === expected, 'zone gagnante cohérente', winZone + ' / attendu ' + expected);
 
   balance = await balanceOf();
-  const expectedBalance = expected === 'under' ? 900 + 200 : 900;
+  const expectedBalance = 999900 + (expected === 'under' ? 200 : 0);
   log(Math.abs(balance - expectedBalance) < 0.01, 'paiement correct', balance + ' (attendu ' + expectedBalance + ')');
   log(/Gagné|Perdu/.test(hintText), 'message de résultat', hintText);
 

@@ -12,11 +12,11 @@
 
   const CFG = {
     rollMs: 2100,
-    startBalance: 1000,
+    startBalance: 1000000,
     maxHistory: 12,
     minChip: 10,
     payouts: { under: 2, seven: 5, over: 2 },
-    storageKey: 'under-over-seven-demo-v1',
+    storageKey: 'under-over-seven-demo-v2',
     resultsKey: 'under-over-seven-results-v1',
     maxRounds: 500,
   };
