@@ -159,9 +159,18 @@ function log(ok, label, detail) {
     fs.writeFileSync(OUT_RESULT, Buffer.from(shotResult.result.data, 'base64'));
   }
 
-  console.log('\n--- Manche suivante + effacement ---');
-  const nextRound = await waitFor("document.querySelector('#phase-tag').textContent==='Paris ouverts'", 8000);
-  log(nextRound, 'nouvelle manche ouverte');
+  console.log('\n--- Mode 100 % manuel ---');
+  await sleep(1500);
+  const stillResult = await evaluate("document.querySelector('#phase-tag').textContent");
+  const rollLabel = await evaluate("document.querySelector('#roll-btn').textContent");
+  log(stillResult === 'Résultat', 'aucun redémarrage automatique', stillResult);
+  log(rollLabel === 'Nouvelle manche', 'bouton de manche manuel', rollLabel);
+
+  await evaluate("document.querySelector('#roll-btn').click()");
+  await sleep(250);
+  const nextRound = await evaluate("document.querySelector('#phase-tag').textContent");
+  log(nextRound === 'Paris ouverts', 'nouvelle manche ouverte au clic', nextRound);
+
   const totalAfter = await evaluate("document.querySelector('#stake-total').textContent");
   log(/^0\s*FCFA/.test(totalAfter), 'mises remises à zéro', totalAfter);
 
@@ -215,6 +224,23 @@ function log(ok, label, detail) {
   if (shotBoard.result && shotBoard.result.data) {
     fs.writeFileSync(path.join(__dirname, 'uo-board.png'), Buffer.from(shotBoard.result.data, 'base64'));
   }
+
+  console.log('\n--- Bot : tirage sans mise ---');
+  await send('Page.navigate', { url: PAGE });
+  await sleep(900);
+  const beforeBot = await balanceOf();
+  await evaluate("document.querySelector('#bot-btn').click()");
+  await sleep(200);
+  const botPhase = await evaluate("document.querySelector('#phase-tag').textContent");
+  log(botPhase === 'Dés en jeu', 'bot : tirage lancé', botPhase);
+  const botDone = await waitFor("document.querySelector('#phase-tag').textContent==='Résultat'", 8000);
+  const botSum = await evaluate("document.querySelector('#sum-value').textContent");
+  log(botDone, 'bot : résultat affiché', botSum);
+  log(Number(botSum) >= 2 && Number(botSum) <= 12, 'bot : somme valide', botSum);
+  const botSub = await evaluate("document.querySelector('#bot-sub').textContent");
+  log(/tirage/.test(String(botSub)), 'compteur du bot', botSub);
+  const botBalance = await balanceOf();
+  log(Math.abs(botBalance - beforeBot) < 0.01, 'bot : solde intact', botBalance + ' (avant ' + beforeBot + ')');
 
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');

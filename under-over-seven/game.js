@@ -11,9 +11,7 @@
   'use strict';
 
   const CFG = {
-    betWindowMs: 9000,
     rollMs: 2100,
-    holdMs: 3400,
     startBalance: 1000,
     maxHistory: 12,
     minChip: 10,
@@ -47,6 +45,9 @@
     stakeOver: $('#stake-over'),
     stakeTotal: $('#stake-total'),
     rollBtn: $('#roll-btn'),
+    botBtn: $('#bot-btn'),
+    botLabel: $('#bot-label'),
+    botSub: $('#bot-sub'),
     hint: $('#hint'),
     clearBtn: $('#clear-btn'),
     rebetBtn: $('#rebet-btn'),
@@ -92,6 +93,8 @@
     history: [],
     results: [],
     rounds: 0,
+    botDraws: 0,
+    botRoll: false,
     sound: true,
     rafId: 0,
     timerId: 0,
@@ -482,7 +485,7 @@
       const btn = ui.chips.children[i];
       btn.classList.toggle('is-active', Number(btn.dataset.chip) === S.chip);
     }
-    ui.chipLabel.textContent = 'Jeton ' + nf0.format(S.chip) + ' €';
+    ui.chipLabel.textContent = 'Jeton ' + nf0.format(S.chip) + ' FCFA';
   }
 
   function totalStake() {
@@ -508,6 +511,18 @@
 
     ui.clearBtn.disabled = totalStake() === 0 || S.phase !== 'betting';
     ui.rebetBtn.disabled = !S.lastBets || S.phase !== 'betting';
+    if (S.phase === 'betting') ui.rollBtn.disabled = totalStake() <= 0;
+    renderBot();
+  }
+
+  function renderBot() {
+    const busy = S.phase === 'rolling';
+    ui.botBtn.disabled = busy;
+    ui.botBtn.classList.toggle('is-busy', busy && S.botRoll);
+    ui.botLabel.textContent = busy && S.botRoll ? 'Bot en cours…' : 'Démarrer le bot';
+    ui.botSub.textContent = S.botDraws > 0
+      ? S.botDraws + (S.botDraws > 1 ? ' tirages générés' : ' tirage généré')
+      : 'génère un tirage sans mise';
   }
 
   function setPhase(phase) {
@@ -519,11 +534,19 @@
 
     ui.zones.forEach((z) => { z.disabled = phase !== 'betting'; });
 
-    ui.rollBtn.className = 'action-btn ' +
-      (phase === 'betting' ? 'is-roll' : phase === 'rolling' ? 'is-wait' : 'is-next');
-    ui.rollBtn.textContent =
-      phase === 'betting' ? 'Lancer les dés' : phase === 'rolling' ? 'Dés en jeu…' : 'Nouvelle manche';
-    ui.rollBtn.disabled = phase === 'rolling';
+    if (phase === 'betting') {
+      ui.rollBtn.className = 'action-btn is-roll';
+      ui.rollBtn.textContent = 'Lancer les dés';
+      ui.rollBtn.disabled = true; // réactivé dès qu'une mise existe
+    } else if (phase === 'rolling') {
+      ui.rollBtn.className = 'action-btn is-wait';
+      ui.rollBtn.textContent = 'Dés en jeu…';
+      ui.rollBtn.disabled = true;
+    } else {
+      ui.rollBtn.className = 'action-btn is-next';
+      ui.rollBtn.textContent = 'Nouvelle manche';
+      ui.rollBtn.disabled = false;
+    }
 
     renderBets();
   }
@@ -555,11 +578,8 @@
     return 1 + Math.floor(Math.random() * 6);
   }
 
-  // ---------- Déroulement d'une manche ----------
-  let roundTimer = 0;
-
+  // ---------- Déroulement d'une manche (100 % manuel) ----------
   function startBetting() {
-    clearTimeout(roundTimer);
     cancelAnimationFrame(S.rafId);
     S.bets = { under: 0, seven: 0, over: 0 };
     S.sum = null;
@@ -570,31 +590,40 @@
     ui.sumValue.className = 'sum-value is-empty';
     ui.sumOutcome.textContent = 'Placez vos mises';
     ui.zones.forEach((el) => el.classList.remove('is-win', 'is-lose'));
-    ui.timer.textContent = (CFG.betWindowMs / 1000).toFixed(1) + 's';
+    ui.timer.textContent = 'mise libre';
     ui.roundFill.style.width = '0%';
-    setHint('Cliquez sur une zone du tapis pour miser');
-
-    const t0 = Clock.now();
-    const tick = () => {
-      if (S.phase !== 'betting') return;
-      const left = Math.max(0, CFG.betWindowMs - (Clock.now() - t0));
-      ui.roundFill.style.width = ((1 - left / CFG.betWindowMs) * 100).toFixed(1) + '%';
-      ui.timer.textContent = (left / 1000).toFixed(1) + 's';
-      if (left <= 0) { startRoll(); return; }
-      S.rafId = requestAnimationFrame(tick);
-    };
-    S.rafId = requestAnimationFrame(tick);
+    setHint('Placez votre mise sur le tapis, puis cliquez sur « Lancer les dés ».');
   }
 
-  function startRoll() {
-    if (S.phase !== 'betting') return;
-    cancelAnimationFrame(S.rafId);
+  function startRoll(opts) {
+    const bot = !!(opts && opts.bot);
+    if (S.phase === 'rolling') return;
 
-    S.lastBets = { under: S.bets.under, seven: S.bets.seven, over: S.bets.over };
+    if (bot) {
+      // Le bot ne mélange pas les mises en cours : elles sont rendues.
+      const staked = totalStake();
+      if (staked > 0) {
+        setBalance(S.balance + staked);
+        S.bets = { under: 0, seven: 0, over: 0 };
+      }
+      S.botDraws += 1;
+    } else {
+      if (S.phase !== 'betting') return;
+      if (totalStake() <= 0) {
+        setHint('Placez une mise avant de lancer les dés — ou utilisez « Démarrer le bot ».', 'loss');
+        return;
+      }
+      S.lastBets = { under: S.bets.under, seven: S.bets.seven, over: S.bets.over };
+    }
+
+    S.botRoll = bot;
+    cancelAnimationFrame(S.rafId);
+    ui.zones.forEach((el) => el.classList.remove('is-win', 'is-lose'));
     setPhase('rolling');
+
     ui.sumValue.textContent = '—';
     ui.sumValue.className = 'sum-value is-empty';
-    ui.sumOutcome.textContent = 'Les dés roulent…';
+    ui.sumOutcome.textContent = bot ? 'Le bot lance les dés…' : 'Les dés roulent…';
     ui.timer.textContent = '· · ·';
 
     S.d1 = d6();
@@ -633,7 +662,7 @@
     });
 
     if (staked === 0) {
-      setHint('Aucune mise — ' + label + ' (' + sum + ')');
+      setHint('Bot · tirage ' + S.botDraws + ' : ' + label + ' (somme ' + sum + ') — relancez le bot pour un nouveau tirage');
     } else if (win > 0) {
       setHint('Gagné ' + money(win) + ' — net +' + money(win - staked), 'win');
       if (S.outcome === 'seven') Sound.seven(); else Sound.win();
@@ -646,7 +675,6 @@
     recordRound(sum, win, staked);
     S.rounds += 1;
     renderBets();
-    roundTimer = setTimeout(startBetting, CFG.holdMs);
   }
 
   // ---------- Actions ----------
@@ -708,6 +736,11 @@
       Sound.unlock();
       if (S.phase === 'betting') startRoll();
       else if (S.phase === 'result') startBetting();
+    });
+
+    ui.botBtn.addEventListener('click', () => {
+      Sound.unlock();
+      startRoll({ bot: true });
     });
 
     ui.clearBtn.addEventListener('click', clearBets);

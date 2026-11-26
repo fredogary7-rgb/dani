@@ -48,6 +48,8 @@ Deux dés à six faces, somme de 2 à 12.
 | Over 7 (8 → 12) | 15/36 | ×2 | 41,67 % |
 
 - Tapis vert feutré, bordures or, trois zones de mise cliquables
+- **100 % manuel** : tu places la mise, tu cliques « Lancer les dés » ; rien ne relance
+  tout seul. Un bouton **« Démarrer le bot »** génère un tirage sans mise.
 - **Dés 3D isométriques** dessinés au canvas (faces, pips en dégradé, ombre portée),
   animation de lancer : rebonds, rotation, écrasement à l'impact, atterrissage
 - Jetons de mise ronds, historique des sommes coloré, « Effacer » / « Rejouer »

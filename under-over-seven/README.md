@@ -11,9 +11,11 @@ Ouvrir `index.html` (ou `node ../tools/serve.js 8080` puis `/under-over-seven/`)
 
 1. Choisir un jeton (10 / 50 / 100 / 500 / 1 000 FCFA) dans le panneau.
 2. Cliquer une zone du tapis : chaque clic ajoute le jeton à cette zone.
-3. Le tirage part automatiquement à la fin du compte à rebours (9 s), ou tout de suite
-   avec **Lancer les dés**.
-4. **Effacer** rembourse les mises, **Rejouer** rejoue la mise du tour précédent.
+3. **Lancer les dés** : le tirage ne part **que** sur ce clic — aucun compte à rebours,
+   aucune relance automatique.
+4. Après le résultat, la manche reste figée : **Nouvelle manche** pour rejouer,
+   ou **Démarrer le bot** pour générer un tirage sans mise (et voir le résultat).
+5. **Effacer** rembourse les mises, **Rejouer** rejoue la mise du tour précédent.
 
 ## Règles & maths
 
@@ -32,6 +34,10 @@ plus défavorable que le Crash. C'est le propre des paris « secs » à un lance
 - **Dés 3D isométriques** dessinés au canvas : 3 faces visibles, pips en dégradé
   (le 1 est rouge, comme sur les dés de casino), ombre portée, bords arrondis
 - Animation de lancer : deux rebonds, rotation, écrasement à l'impact, atterrissage
+- **Aucune automatisation** : ni compte à rebours ni relance auto — chaque tirage part
+  d'un clic sur « Lancer les dés », la manche reste figée sur le résultat
+- **Bot de tirage** : bouton « Démarrer le bot » qui génère un tirage sans mise (les mises
+  en cours sont rendues) et compte les tirages générés
 - Jetons de mise ronds, total engagé, table des gains, historique coloré des sommes
 - **Page « Résultats »** (`results.html`) : journal exact de chaque tour (dé 1, dé 2, somme,
   issue, mise, gain/perte), KPI (Under/Sept/Over, RTP et net observés), histogramme des
