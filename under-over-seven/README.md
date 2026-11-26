@@ -1,0 +1,46 @@
+# Under / Over 7 — démo jouable (argent fictif)
+
+Deux dés à six faces, une somme de 2 à 12. On mise sur **Under 7**, **Sept exact** ou
+**Over 7**, les dés roulent, le tapis s'illumine.
+
+> ⚠️ Démo technique, argent fictif, aucun lien avec un opérateur. 18+.
+
+## Jouer
+
+Ouvrir `index.html` (ou `node ../tools/serve.js 8080` puis `/under-over-seven/`).
+
+1. Choisir un jeton (10 / 50 / 100 / 500 / 1 000 €) dans le panneau.
+2. Cliquer une zone du tapis : chaque clic ajoute le jeton à cette zone.
+3. Le tirage part automatiquement à la fin du compte à rebours (9 s), ou tout de suite
+   avec **Lancer les dés**.
+4. **Effacer** rembourse les mises, **Rejouer** rejoue la mise du tour précédent.
+
+## Règles & maths
+
+| Pari | Combinaisons | Paiement | Fréquence |
+| --- | --- | --- | --- |
+| Under 7 (2 → 6) | 15/36 | ×2 | 41,67 % |
+| Sept exact | 6/36 | ×5 | 16,67 % |
+| Over 7 (8 → 12) | 15/36 | ×2 | 41,67 % |
+
+RTP = 15/36 × 2 = 6/36 × 5 = **83,33 %** → **avantage maison 16,67 %**, soit cinq fois
+plus défavorable que le Crash. C'est le propre des paris « secs » à un lancer.
+
+## Contenu
+
+- Tapis feutré vert, bordures or, zones de mise teintées (teal / or / violet)
+- **Dés 3D isométriques** dessinés au canvas : 3 faces visibles, pips en dégradé
+  (le 1 est rouge, comme sur les dés de casino), ombre portée, bords arrondis
+- Animation de lancer : deux rebonds, rotation, écrasement à l'impact, atterrissage
+- Jetons de mise ronds, total engagé, table des gains, historique coloré des sommes
+- Phase de résultat : somme géante colorée, zone gagnante illuminée, zones perdantes
+  atténuées, message « Gagné / Perdu », sons de dés (secousses + impacts) et de gain
+- Solde persistant (`localStorage`), bouton ↺ pour réinitialiser, clavier espace / Entrée
+
+## Fichiers
+
+```
+index.html   structure du tapis et du panneau
+style.css    thème tapis vert / or
+game.js      moteur : tirage crypto, dés 3D, manches, paiements, sons
+```

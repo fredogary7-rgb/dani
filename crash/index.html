@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crash — démo (argent fictif)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">CRASH</span>
+      <span class="brand-sub">démo · argent fictif</span>
+    </div>
+    <div class="topbar-right">
+      <div class="balance">
+        <span class="balance-label">Solde</span>
+        <strong id="balance">1 000,00 €</strong>
+      </div>
+      <button class="ghost-btn" id="reset-btn" title="Réinitialiser le solde">↺</button>
+      <button class="ghost-btn" id="sound-btn" title="Couper le son">🔊</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ---------- Scène de jeu ---------- -->
+    <section class="stage" id="stage">
+      <div class="history" id="history" aria-label="Derniers crashs"></div>
+
+      <canvas id="graph"></canvas>
+
+      <div class="stage-center">
+        <div class="multiplier" id="multiplier">1.00<span>×</span></div>
+        <div class="stage-status" id="stage-status">Prochain tour…</div>
+      </div>
+
+      <div class="progress" id="progress"><span id="progress-fill"></span></div>
+      <div class="stage-foot">
+        <span id="stage-foot-left">Départ dans 6.0s</span>
+        <span id="stage-foot-right">Espérance de gain : −3 % par tour</span>
+      </div>
+    </section>
+
+    <!-- ---------- Panneau de mise ---------- -->
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Votre pari</h2>
+        <span class="phase-tag" id="phase-tag">En attente</span>
+      </div>
+
+      <div class="field">
+        <label for="bet-input">Mise (€)</label>
+        <div class="amount-row">
+          <button class="amount-btn" data-step="-100" aria-label="Diminuer">−</button>
+          <div class="amount-input">
+            <input id="bet-input" value="100" inputmode="numeric" autocomplete="off">
+            <span>€</span>
+          </div>
+          <button class="amount-btn" data-step="100" aria-label="Augmenter">+</button>
+        </div>
+        <div class="quick-row">
+          <button data-quick="10">10</button>
+          <button data-quick="100">100</button>
+          <button data-quick="500">500</button>
+          <button data-quick="1000">1 000</button>
+          <button data-quick="x2">×2</button>
+          <button data-quick="x0.5">½</button>
+        </div>
+      </div>
+
+      <div class="auto-row">
+        <label class="switch">
+          <input type="checkbox" id="auto-toggle">
+          <span class="track"><span class="knob"></span></span>
+          <span class="switch-label">Retrait automatique</span>
+        </label>
+        <div class="auto-input is-off" id="auto-input-wrap">
+          <input id="auto-input" value="2.00" inputmode="decimal" autocomplete="off">
+          <span>×</span>
+        </div>
+      </div>
+
+      <button id="action-btn" class="action-btn is-bet">Parier</button>
+      <div class="hint" id="action-hint">Mise min. 10 € · barre d'espace pour valider</div>
+
+      <div class="live">
+        <div class="live-head">
+          <span>Joueurs simulés</span>
+          <span class="live-count" id="live-count">—</span>
+        </div>
+        <ul class="live-list" id="live-list"></ul>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="footer">
+    Démo technique — aucune transaction réelle, aucun lien avec 1xBet.
+    Le jeu d'argent comporte des risques : endettement, isolement, dépendance.
+  </footer>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>

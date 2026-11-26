@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Under &amp; Over 7 — démo (argent fictif)</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">UNDER <em>/</em> OVER 7</span>
+      <span class="brand-sub">démo · argent fictif</span>
+    </div>
+    <div class="topbar-right">
+      <div class="balance">
+        <span class="balance-label">Solde</span>
+        <strong id="balance">1 000,00 €</strong>
+      </div>
+      <button class="ghost-btn" id="reset-btn" title="Réinitialiser le solde">↺</button>
+      <button class="ghost-btn" id="sound-btn" title="Couper le son">🔊</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- ---------------- Tapis ---------------- -->
+    <section class="table">
+
+      <div class="history" id="history" aria-label="Dernières sommes"></div>
+
+      <div class="table-top">
+        <span class="phase-tag" id="phase-tag">Paris ouverts</span>
+        <span class="timer" id="timer">9.0s</span>
+      </div>
+
+      <div class="board">
+        <div class="sum-box">
+          <span class="sum-label">Somme des dés</span>
+          <strong class="sum-value is-empty" id="sum-value">—</strong>
+          <span class="sum-outcome" id="sum-outcome">Placez vos mises</span>
+        </div>
+        <div class="dice-wrap">
+          <canvas id="dice-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="zones" id="zones">
+        <button class="zone zone-under" data-zone="under" type="button">
+          <span class="zone-line">
+            <span class="zone-name">UNDER 7</span>
+            <span class="zone-pay">×2</span>
+          </span>
+          <span class="zone-desc">somme 2 · 3 · 4 · 5 · 6</span>
+          <span class="zone-stake" id="zone-stake-under">—</span>
+        </button>
+
+        <button class="zone zone-seven" data-zone="seven" type="button">
+          <span class="zone-line">
+            <span class="zone-name">SEPT</span>
+            <span class="zone-pay">×5</span>
+          </span>
+          <span class="zone-desc">somme exactement 7</span>
+          <span class="zone-stake" id="zone-stake-seven">—</span>
+        </button>
+
+        <button class="zone zone-over" data-zone="over" type="button">
+          <span class="zone-line">
+            <span class="zone-name">OVER 7</span>
+            <span class="zone-pay">×2</span>
+          </span>
+          <span class="zone-desc">somme 8 · 9 · 10 · 11 · 12</span>
+          <span class="zone-stake" id="zone-stake-over">—</span>
+        </button>
+      </div>
+
+      <div class="table-foot">
+        <span id="foot-left">Deux dés à six faces · 36 combinaisons</span>
+        <span id="foot-right">Avantage maison : 16,7 %</span>
+      </div>
+
+      <div class="round-bar"><span id="round-fill"></span></div>
+    </section>
+
+    <!-- ---------------- Panneau ---------------- -->
+    <aside class="panel">
+      <div class="panel-head">
+        <h2>Votre mise</h2>
+        <span class="chip-label" id="chip-label">Jeton 100 €</span>
+      </div>
+
+      <div class="chips" id="chips">
+        <button data-chip="10" type="button">10</button>
+        <button data-chip="50" type="button">50</button>
+        <button data-chip="100" class="is-active" type="button">100</button>
+        <button data-chip="500" type="button">500</button>
+        <button data-chip="1000" type="button">1 000</button>
+      </div>
+
+      <div class="stakes">
+        <div class="stake-row"><span>Under 7</span><strong id="stake-under">0,00 €</strong></div>
+        <div class="stake-row"><span>Sept exact</span><strong id="stake-seven">0,00 €</strong></div>
+        <div class="stake-row"><span>Over 7</span><strong id="stake-over">0,00 €</strong></div>
+        <div class="stake-total"><span>Total engagé</span><strong id="stake-total">0,00 €</strong></div>
+      </div>
+
+      <button id="roll-btn" class="action-btn is-roll" type="button">Lancer les dés</button>
+      <div class="hint" id="hint">Cliquez sur une zone du tapis pour miser</div>
+
+      <div class="secondary-row">
+        <button id="clear-btn" class="ghost-btn wide" type="button">Effacer</button>
+        <button id="rebet-btn" class="ghost-btn wide" type="button">Rejouer</button>
+      </div>
+
+      <div class="odds">
+        <div class="odds-head">Table des gains</div>
+        <div class="odds-row"><span>Under 7 · 15/36</span><strong>×2</strong></div>
+        <div class="odds-row"><span>Sept exact · 6/36</span><strong>×5</strong></div>
+        <div class="odds-row"><span>Over 7 · 15/36</span><strong>×2</strong></div>
+        <div class="odds-note">RTP 83,3 % — avantage maison 16,7 %</div>
+      </div>
+    </aside>
+
+  </main>
+
+  <footer class="footer">
+    Démo technique — aucune transaction réelle, aucun lien avec 1xBet.
+    Le jeu d'argent comporte des risques : endettement, isolement, dépendance.
+  </footer>
+</div>
+
+<script src="game.js"></script>
+</body>
+</html>
