@@ -1,0 +1,247 @@
+/* Page de résultats — complète style.css (mêmes variables) */
+
+.topbar-right .ghost-btn { font-size: 13px; }
+
+/* ---------- Indicateur de fraîcheur ---------- */
+.live-pill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #9effd7;
+  background: rgba(31, 192, 122, 0.14);
+  border: 1px solid rgba(31, 192, 122, 0.34);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.live-pill.is-new {
+  color: #20180a;
+  background: var(--gold);
+  border-color: #f4d888;
+}
+
+/* ---------- KPI ---------- */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.kpi-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.kpi strong {
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+}
+
+.kpi em {
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-under { border-color: rgba(41, 182, 168, 0.4); }
+.kpi-under strong { color: #6bf5e4; }
+.kpi-seven { border-color: rgba(233, 189, 82, 0.4); }
+.kpi-seven strong { color: #ffd45e; }
+.kpi-over { border-color: rgba(162, 116, 255, 0.4); }
+.kpi-over strong { color: #cfaeff; }
+
+/* ---------- Blocs ---------- */
+.block {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.block-head h2 {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.block-sub { font-size: 11.5px; color: #6f7a75; }
+
+/* ---------- Distribution ---------- */
+.dist { display: flex; flex-direction: column; gap: 5px; }
+
+.dist-row {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 108px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.dist-sum {
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #dfe6e1;
+  text-align: right;
+}
+
+.dist-track {
+  position: relative;
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+.dist-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, rgba(41, 182, 168, 0.85), rgba(216, 176, 76, 0.85));
+  transition: width 0.35s ease;
+}
+
+.dist-mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.dist-val {
+  text-align: right;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dist-val b { color: #fff; }
+
+/* ---------- Tableau ---------- */
+.table-wrap {
+  max-height: 470px;
+  overflow: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #0f1116;
+}
+
+.res-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.res-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--muted);
+  background: #171a21;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.res-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  font-variant-numeric: tabular-nums;
+  color: #d9dde3;
+  white-space: nowrap;
+}
+
+.res-table tbody tr:last-child td { border-bottom: 0; }
+.res-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.018); }
+
+.res-table .num { color: #8d96a3; font-size: 12px; }
+
+.sum-pill {
+  display: inline-block;
+  min-width: 26px;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sum-under { color: #7ff0e4; background: rgba(41, 182, 168, 0.16); }
+.sum-seven { color: #ffdd8a; background: rgba(233, 189, 82, 0.18); }
+.sum-over { color: #cbb4ff; background: rgba(162, 116, 255, 0.16); }
+
+.pos { color: #55e39a; font-weight: 800; }
+.neg { color: #ff7f8a; font-weight: 800; }
+.muted { color: #6d7683; }
+
+/* ---------- État vide ---------- */
+.empty {
+  display: none;
+  padding: 46px 20px;
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.empty p { margin: 0 0 6px; }
+.empty strong { color: #dfe6e1; }
+
+.cta {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  color: #1b1508;
+  text-decoration: none;
+  background: linear-gradient(180deg, #f6d98d, var(--gold) 60%, #a9822c);
+  box-shadow: 0 10px 26px rgba(216, 176, 76, 0.28);
+}
+
+.table-wrap.is-empty table { display: none; }
+.table-wrap.is-empty .empty { display: block; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dist-row { grid-template-columns: 26px minmax(0, 1fr) 92px; font-size: 11px; }
+  .res-table { font-size: 12px; }
+  .res-table td, .res-table thead th { padding: 8px; }
+  .brand-sub { display: none; }
+}

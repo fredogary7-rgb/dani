@@ -173,6 +173,30 @@ function log(ok, label, detail) {
   const after = await balanceOf();
   log(Math.abs(after - before) < 0.01, 'effacement = remboursement', before + ' -> ' + after);
 
+  console.log('\n--- Page de résultats ---');
+  await send('Page.navigate', { url: PAGE + 'results.html' });
+  await sleep(1000);
+
+  const rowCount = await evaluate("document.querySelectorAll('#rows tr').length");
+  const kpiRounds = await evaluate("document.querySelector('#kpi-rounds').textContent");
+  const kpiLast = await evaluate("document.querySelector('#kpi-last').textContent");
+  const distCount = await evaluate("document.querySelectorAll('#dist .dist-row').length");
+  const cells = await evaluate("(function(){var r=document.querySelector('#rows tr');return r?Array.prototype.map.call(r.children,function(td){return td.textContent;}):[];})()");
+
+  log(rowCount >= 1, 'journal alimenté', rowCount + ' ligne(s)');
+  log(kpiRounds === String(rowCount), 'KPI = nombre de lignes', kpiRounds + ' / ' + rowCount);
+  log(/= \d+$/.test(String(kpiLast)), 'dernier tirage affiché', kpiLast);
+  log(distCount === 11, 'répartition 2 → 12', distCount);
+  log(String(cells[4]) === String(sum), 'somme du journal = dernier tirage', cells[4] + ' vs ' + sum);
+  log(Number(cells[2]) >= 1 && Number(cells[2]) <= 6 && Number(cells[3]) >= 1 && Number(cells[3]) <= 6, 'dés 1 et 2 valides', cells[2] + ' + ' + cells[3]);
+  const expectedNet = sum < 7 ? '+ 100 FCFA' : '- 100 FCFA';
+  log(String(cells[7]).indexOf(expectedNet) === 0, 'gain/perte cohérent', cells[7] + ' (attendu ' + expectedNet + ')');
+
+  const shotRes = await send('Page.captureScreenshot', { format: 'png' });
+  if (shotRes.result && shotRes.result.data) {
+    fs.writeFileSync(path.join(__dirname, 'uo-results.png'), Buffer.from(shotRes.result.data, 'base64'));
+  }
+
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');
 

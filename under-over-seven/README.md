@@ -33,6 +33,10 @@ plus défavorable que le Crash. C'est le propre des paris « secs » à un lance
   (le 1 est rouge, comme sur les dés de casino), ombre portée, bords arrondis
 - Animation de lancer : deux rebonds, rotation, écrasement à l'impact, atterrissage
 - Jetons de mise ronds, total engagé, table des gains, historique coloré des sommes
+- **Page « Résultats »** (`results.html`) : journal exact de chaque tour (dé 1, dé 2, somme,
+  issue, mise, gain/perte), KPI (Under/Sept/Over, RTP et net observés), histogramme des
+  sommes 2 → 12 comparé à la théorie. Alimentée en direct par le jeu (localStorage), elle
+  se rafraîchit toute seule et se met à jour si une autre fenêtre joue.
 - Phase de résultat : somme géante colorée, zone gagnante illuminée, zones perdantes
   atténuées, message « Gagné / Perdu », sons de dés (secousses + impacts) et de gain
 - Solde persistant (`localStorage`), bouton ↺ pour réinitialiser, clavier espace / Entrée
@@ -42,5 +46,8 @@ plus défavorable que le Crash. C'est le propre des paris « secs » à un lance
 ```
 index.html   structure du tapis et du panneau
 style.css    thème tapis vert / or
-game.js      moteur : tirage crypto, dés 3D, manches, paiements, sons
+game.js      moteur : tirage crypto, dés 3D, manches, paiements, sons, journal des tours
+results.html page « Résultats » (journal + statistiques)
+results.css  styles de la page de résultats
+results.js   lecture du journal (localStorage) et rendu des stats
 ```

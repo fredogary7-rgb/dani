@@ -19,6 +19,8 @@
     minChip: 10,
     payouts: { under: 2, seven: 5, over: 2 },
     storageKey: 'under-over-seven-demo-v1',
+    resultsKey: 'under-over-seven-results-v1',
+    maxRounds: 500,
   };
 
   const $ = (sel) => document.querySelector(sel);
@@ -88,6 +90,7 @@
     sum: null,
     outcome: null,
     history: [],
+    results: [],
     rounds: 0,
     sound: true,
     rafId: 0,
@@ -107,8 +110,42 @@
 
   function saveBalance() {
     try {
-      localStorage.setItem(CFG.storageKey, JSON.stringify({ balance: round2(S.balance) }));
+      localStorage.setItem(CFG.storageKey, JSON.stringify({ balance: Math.round(S.balance) }));
     } catch (err) { /* mode privé */ }
+  }
+
+  // ---------- Journal des tours (lu par results.html) ----------
+  function loadResults() {
+    try {
+      const raw = localStorage.getItem(CFG.resultsKey);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed && parsed.rounds) ? parsed.rounds : [];
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function saveResults() {
+    try {
+      localStorage.setItem(CFG.resultsKey, JSON.stringify({ v: 1, rounds: S.results }));
+    } catch (err) { /* stockage plein ou indisponible */ }
+  }
+
+  function recordRound(sum, win, staked) {
+    const last = S.results[0];
+    S.results.unshift({
+      n: last ? last.n + 1 : 1,
+      ts: Date.now(),
+      d1: S.d1,
+      d2: S.d2,
+      sum: sum,
+      outcome: S.outcome,
+      stake: staked,
+      win: win,
+    });
+    if (S.results.length > CFG.maxRounds) S.results.length = CFG.maxRounds;
+    saveResults();
   }
 
   function setBalance(v) {
@@ -606,6 +643,7 @@
     }
 
     addHistory(sum, S.outcome);
+    recordRound(sum, win, staked);
     S.rounds += 1;
     renderBets();
     roundTimer = setTimeout(startBetting, CFG.holdMs);
@@ -707,6 +745,8 @@
   function init() {
     setBalance(loadBalance());
     if (S.balance < CFG.minChip) setBalance(CFG.startBalance);
+
+    S.results = loadResults();
 
     renderChips();
     Dice.init();

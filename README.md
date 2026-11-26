@@ -52,13 +52,16 @@ Deux dés à six faces, somme de 2 à 12.
   animation de lancer : rebonds, rotation, écrasement à l'impact, atterrissage
 - Jetons de mise ronds, historique des sommes coloré, « Effacer » / « Rejouer »
 - Math : RTP = 15/36 × 2 = 6/36 × 5 = **83,33 %** (avantage maison 16,67 %)
+- **Page « Résultats »** : `/under-over-seven/results.html` — journal exact des tours
+  (dés, somme, issue, mise, gain/perte), KPI et histogramme des sommes comparé à la théorie
 
 ## Structure
 
 ```
 index.html                    hub (choix du jeu)
 crash/                        jeu 1 : index.html, style.css, game.js
-under-over-seven/             jeu 2 : index.html, style.css, game.js
+under-over-seven/             jeu 2 : index.html, style.css, game.js,
+                              results.html / results.css / results.js (journal des tours)
 tools/serve.js                serveur statique local (port 8080)
 tools/rtp-crash.js            simulation 1 M de tours → RTP du Crash
 tools/rtp-under-over.js       simulation 1 M de lancers → distribution + RTP des dés
