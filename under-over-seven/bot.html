@@ -25,38 +25,25 @@
   <!-- ---------------- Prédiction du prochain tirage ---------------- -->
   <section class="pred" id="pred">
     <div class="pred-head">
-      <span class="pred-label">Prédiction du prochain tirage</span>
-      <label class="pred-strategy">
-        <span>Stratégie</span>
-        <select id="strategy">
-          <option value="major">Majorité historique</option>
-          <option value="follow">Suivre la dernière issue</option>
-          <option value="against">Contre la dernière issue</option>
-          <option value="seven">Toujours le 7</option>
-        </select>
-      </label>
+      <span class="pred-label">Valeur du prochain tirage</span>
+      <span class="pred-badge" id="pred-pos">programme n°1</span>
     </div>
 
     <strong class="pred-sign" id="pred-sign">—</strong>
-    <span class="pred-detail" id="pred-detail">en attente de tirages…</span>
+    <span class="pred-detail" id="pred-detail">lecture du programme…</span>
 
-    <div class="pred-conf">
-      <span>Confiance annoncée</span>
-      <div class="pred-track"><i id="pred-bar"></i></div>
-      <strong id="pred-conf">—</strong>
-    </div>
-
-    <p class="pred-note">
-      La confiance affichée est la <strong>probabilité réelle</strong> de l'issue annoncée
-      (41,67 % pour −7 ou +7, 16,67 % pour le 7).
+    <p class="pred-source">
+      Valeur lue dans la <strong>file programmée</strong> (<code>script.js</code>) : elle sera
+      tirée à l'identique au prochain « Lancer les dés » de la page du joueur.
     </p>
   </section>
 
   <footer class="footer">
-    Démo technique — argent fictif, prédiction statistique. Aucune transaction réelle,
+    Démo technique — argent fictif, tirages programmés. Aucune transaction réelle,
     aucun lien avec un opérateur.
   </footer>
 </div>
+<script src="script.js"></script>
 <script src="bot.js"></script>
 </body>
 </html>

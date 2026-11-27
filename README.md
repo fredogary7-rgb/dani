@@ -101,6 +101,7 @@ scripts pour Chrome/Chromium sur macOS ou Linux.
   `ResizeObserver`.
 - **Horloge du jeu** (`Clock`) : le temps passé onglet masqué est compensé, donc un tour
   se **met en pause** au lieu de « sauter » au retour.
-- **Tirage des dés** : `crypto.getRandomValues` avec rejet du biais modulo.
+- **Tirages programmés** : une file de résultats déterministe (`script.js`) est consommée par
+  le jeu, manche après manche. Le bouton ↺ remet le programme au début.
 - **Aucune image externe** : avion, courbe, dés, pips, ombres, particules = code.
 - **Persistance** : solde en `localStorage` (bouton ↺ pour réinitialiser).

@@ -25,8 +25,24 @@ Ouvrir `index.html` (ou `node ../tools/serve.js 8080` puis `/under-over-seven/`)
 | Sept exact | 6/36 | ×5 | 16,67 % |
 | Over 7 (8 → 12) | 15/36 | ×2 | 41,67 % |
 
-RTP = 15/36 × 2 = 6/36 × 5 = **83,33 %** → **avantage maison 16,67 %**, soit cinq fois
-plus défavorable que le Crash. C'est le propre des paris « secs » à un lancer.
+Avec deux dés honnêtes, RTP = 15/36 × 2 = 6/36 × 5 = **83,33 %** (avantage maison 16,67 %).
+⚠️ Ici les tirages sont **programmés** (`script.js`) : le RTP théorique ne s'applique plus,
+puisque la suite est fixée à l'avance — c'est une démo, pas un jeu exploitable.
+
+## Programme des tirages (`script.js`)
+
+```js
+const PROGRAM = [
+  [3, 4], // 7
+  [1, 1], // 2
+  // … ajoute / modifie les paires [dé 1, dé 2] que tu veux
+];
+```
+
+- Le jeu **consomme** la file : chaque « Lancer les dés » prend la paire suivante.
+- La page bot **lit** la file sans la consommer : elle annonce donc la valeur exacte à venir.
+- Après `PROGRAM`, la suite continue de façon **déterministe** (même graine = mêmes valeurs).
+- Le bouton ↺ du jeu réinitialise le solde **et** le programme (retour à la première paire).
 
 ## Contenu
 
@@ -36,10 +52,9 @@ plus défavorable que le Crash. C'est le propre des paris « secs » à un lance
 - Animation de lancer : deux rebonds, rotation, écrasement à l'impact, atterrissage
 - **Aucune automatisation** : ni compte à rebours ni relance auto — chaque tirage part
   d'un clic sur « Lancer les dés », la manche reste figée sur le résultat
-- **Page Bot** (`bot.html`) : le bot annonce la prédiction du prochain tirage (4 stratégies),
-  affiche sa **confiance réelle** (41,67 % / 16,67 %) et se **note lui-même** sur les tirages
-  réels (backtest : prédiction vs résultat, taux de réussite, écart à la référence).
-  Il ne lance jamais les dés — et son score ne peut pas dépasser la probabilité de base.
+- **Page Bot** (`bot.html`) : affiche la **valeur du prochain tirage**, lue dans la file
+  programmée — elle sera tirée à l'identique au prochain « Lancer les dés ».
+  Le bot ne lance rien et n'utilise aucun historique.
 - Jetons de mise ronds, total engagé, table des gains, historique coloré des sommes
 - **Page « Résultats »** (`results.html`) : journal exact de chaque tour (dé 1, dé 2, somme,
   issue, mise, gain/perte), KPI (Under/Sept/Over, RTP et net observés), histogramme des

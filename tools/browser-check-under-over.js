@@ -225,24 +225,33 @@ function log(ok, label, detail) {
     fs.writeFileSync(path.join(__dirname, 'uo-board.png'), Buffer.from(shotBoard.result.data, 'base64'));
   }
 
-  console.log('\n--- Page du bot ---');
+  console.log('\n--- Page bot : valeur programmée ---');
   await send('Page.navigate', { url: PAGE + 'bot.html' });
   await sleep(900);
 
   const predSign = await evaluate("document.querySelector('#pred-sign').textContent");
-  const predConf = await evaluate("document.querySelector('#pred-conf').textContent");
-  log(['−7', '7', '+7'].indexOf(predSign) >= 0, 'prédiction affichée', predSign);
-  log(/41,67|16,67/.test(String(predConf)), 'confiance = probabilité réelle', predConf);
+  const predDetail = await evaluate("document.querySelector('#pred-detail').textContent");
+  const predPos = await evaluate("document.querySelector('#pred-pos').textContent");
+  const peekedSum = Number((String(predDetail).match(/=\s*(\d+)/) || [])[1]);
 
-  await evaluate("(function(){var s=document.querySelector('#strategy');s.value='seven';s.dispatchEvent(new Event('change'));})()");
-  await sleep(250);
-  const sevenSign = await evaluate("document.querySelector('#pred-sign').textContent");
-  log(sevenSign === '7', 'stratégie « toujours le 7 »', sevenSign);
+  log(['−7', '7', '+7'].indexOf(predSign) >= 0, 'issue programmée affichée', predSign);
+  log(peekedSum >= 2 && peekedSum <= 12, 'dés annoncés', predDetail);
+  log(/programme n°\d+/.test(String(predPos)), 'position dans le programme', predPos);
 
   const shotBot = await send('Page.captureScreenshot', { format: 'png' });
   if (shotBot.result && shotBot.result.data) {
     fs.writeFileSync(path.join(__dirname, 'uo-bot.png'), Buffer.from(shotBot.result.data, 'base64'));
   }
+
+  // Le jeu doit tirer EXACTEMENT la valeur annoncée par le bot
+  await send('Page.navigate', { url: PAGE });
+  await sleep(900);
+  await evaluate("document.querySelector('.zone-under').click()");
+  await sleep(120);
+  await evaluate("document.querySelector('#roll-btn').click()");
+  const rolledOk = await waitFor("document.querySelector('#phase-tag').textContent==='Résultat'", 8000);
+  const rolledSum = Number(await evaluate("document.querySelector('#sum-value').textContent"));
+  log(rolledOk && rolledSum === peekedSum, 'le jeu tire la valeur annoncée', rolledSum + ' vs ' + peekedSum);
 
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');

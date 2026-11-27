@@ -596,8 +596,9 @@
     ui.sumOutcome.textContent = 'Les dés roulent…';
     ui.timer.textContent = '· · ·';
 
-    S.d1 = d6();
-    S.d2 = d6();
+    const planned = window.GameScript ? window.GameScript.next() : null;
+    S.d1 = planned ? planned.d1 : d6();
+    S.d2 = planned ? planned.d2 : d6();
 
     const t0 = Clock.now();
     const bar = () => {
@@ -723,9 +724,10 @@
       S.bets = { under: 0, seven: 0, over: 0 };
       S.history = [];
       S.lastBets = null;
+      if (window.GameScript) window.GameScript.reset();
       renderHistory();
       renderBets();
-      setHint('Solde fictif réinitialisé à ' + money(CFG.startBalance));
+      setHint('Solde fictif réinitialisé à ' + money(CFG.startBalance) + ' et programme remis à zéro');
     });
 
     document.addEventListener('keydown', (e) => {
@@ -748,7 +750,8 @@
 
     renderChips();
     Dice.init();
-    Dice.reset(d6(), d6());
+    const peeked = window.GameScript ? window.GameScript.peek() : null;
+    Dice.reset(peeked ? peeked.d1 : d6(), peeked ? peeked.d2 : d6());
 
     for (let i = 0; i < 8; i++) {
       const s = d6() + d6();

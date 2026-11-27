@@ -76,6 +76,38 @@
   color: var(--muted);
 }
 
+.pred-badge {
+  font-size: 10.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ffdd8a;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(233, 189, 82, 0.12);
+  border: 1px solid rgba(233, 189, 82, 0.36);
+  white-space: nowrap;
+}
+
+.pred-source {
+  max-width: 620px;
+  margin: 12px 0 0;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #7f8a95;
+  text-align: center;
+}
+
+.pred-source strong { color: #b9c2cc; }
+
+.pred-source code {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+
 .pred-strategy select {
   font-family: inherit;
   font-size: 12px;
