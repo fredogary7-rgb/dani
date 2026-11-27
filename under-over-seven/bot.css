@@ -1,0 +1,355 @@
+/* Page Bot — complète style.css (mêmes variables) */
+
+.bot-body {
+  background:
+    radial-gradient(900px 520px at 50% -12%, rgba(162, 116, 255, 0.12), transparent 60%),
+    #05060a;
+}
+
+.bot-app { max-width: 1180px; gap: 14px; }
+
+.live-pill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #9effd7;
+  background: rgba(31, 192, 122, 0.14);
+  border: 1px solid rgba(31, 192, 122, 0.34);
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.live-pill.is-new {
+  color: #20180a;
+  background: var(--gold);
+  border-color: #f4d888;
+}
+
+/* ---------------- Prédiction ---------------- */
+.pred {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 18px 20px 20px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #14131c, #0b0a11);
+  border: 1px solid rgba(162, 116, 255, 0.3);
+  overflow: hidden;
+}
+
+.pred::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, var(--glow, rgba(255, 255, 255, 0.08)), transparent 62%);
+  pointer-events: none;
+}
+
+.pred-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.pred-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+
+.pred-strategy {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.pred-strategy select {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  color: #e9edf2;
+  background: #1a1c24;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.pred-sign {
+  font-size: clamp(72px, 13vw, 132px);
+  font-weight: 900;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.22);
+  transition: color 0.25s;
+}
+
+.pred-detail {
+  font-size: 13px;
+  color: #c6cdd6;
+  font-variant-numeric: tabular-nums;
+}
+
+.pred.is-under { --glow: rgba(41, 182, 168, 0.28); }
+.pred.is-under .pred-sign { color: #6bf5e4; text-shadow: 0 0 60px rgba(41, 182, 168, 0.6); }
+.pred.is-seven { --glow: rgba(233, 189, 82, 0.26); }
+.pred.is-seven .pred-sign { color: #ffd45e; text-shadow: 0 0 60px rgba(233, 189, 82, 0.6); }
+.pred.is-over { --glow: rgba(162, 116, 255, 0.28); }
+.pred.is-over .pred-sign { color: #cfaeff; text-shadow: 0 0 60px rgba(162, 116, 255, 0.6); }
+
+.pred-conf {
+  display: grid;
+  grid-template-columns: auto minmax(0, 220px) 66px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.pred-conf strong {
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.pred-track {
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.pred-track i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #6d4bb3, #a274ff);
+  transition: width 0.35s ease;
+}
+
+.pred-note {
+  max-width: 620px;
+  margin: 10px 0 0;
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #7f8a95;
+  text-align: center;
+}
+
+.pred-note strong { color: #b9c2cc; }
+
+/* ---------------- Blocs ---------------- */
+.block {
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+}
+
+.block-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.block-head h2 {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+
+.block-sub { font-size: 11.5px; color: #6f7a75; font-variant-numeric: tabular-nums; }
+
+/* ---------------- Scores par stratégie ---------------- */
+.scores { display: flex; flex-direction: column; gap: 6px; }
+
+.score-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 96px 96px 150px;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid transparent;
+  font-size: 12.5px;
+}
+
+.score-row.is-active {
+  border-color: rgba(216, 176, 76, 0.45);
+  background: rgba(216, 176, 76, 0.06);
+}
+
+.score-name { color: #d7dce3; font-weight: 700; }
+
+.score-hits {
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  font-weight: 800;
+  text-align: right;
+}
+
+.score-pct {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  text-align: right;
+  color: #9fb0c0;
+}
+
+.score-gap {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.score-gap b { color: #cbd3dc; }
+
+/* ---------------- Tableau ---------------- */
+.table-wrap {
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #0f1116;
+  max-height: 460px;
+  overflow: auto;
+}
+
+.bot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.bot-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  background: #171a21;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.bot-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.045);
+  font-variant-numeric: tabular-nums;
+  color: #d9dde3;
+  white-space: nowrap;
+}
+
+.bot-table tbody tr:last-child td { border-bottom: 0; }
+.bot-table tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.018); }
+
+.bot-table .num { color: #8d96a3; font-size: 12px; }
+
+.pill {
+  display: inline-block;
+  min-width: 34px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid transparent;
+}
+
+.pill.under { color: #7ff0e4; background: rgba(41, 182, 168, 0.14); border-color: rgba(41, 182, 168, 0.3); }
+.pill.seven { color: #ffdd8a; background: rgba(233, 189, 82, 0.16); border-color: rgba(233, 189, 82, 0.36); }
+.pill.over { color: #cbb4ff; background: rgba(162, 116, 255, 0.14); border-color: rgba(162, 116, 255, 0.3); }
+
+.mark {
+  font-weight: 900;
+  font-size: 15px;
+  text-align: center;
+}
+
+.mark.ok { color: #55e39a; }
+.mark.ko { color: #ff7f8a; }
+
+/* ---------------- État vide ---------------- */
+.empty {
+  display: none;
+  padding: 42px 20px;
+  text-align: center;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.empty p { margin: 0 0 6px; }
+.empty strong { color: #dfe6e1; }
+
+.cta {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  color: #1b1508;
+  text-decoration: none;
+  background: linear-gradient(180deg, #f6d98d, var(--gold) 60%, #a9822c);
+  box-shadow: 0 10px 26px rgba(216, 176, 76, 0.28);
+}
+
+.table-wrap.is-empty table { display: none; }
+.table-wrap.is-empty .empty { display: block; }
+
+/* ---------------- Avertissement ---------------- */
+.disclaimer {
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #c9b6a6;
+  background: rgba(255, 120, 60, 0.07);
+  border: 1px solid rgba(255, 120, 60, 0.28);
+}
+
+.disclaimer strong { color: #ffd9c2; }
+.disclaimer code {
+  font-family: ui-monospace, "Cascadia Code", monospace;
+  font-size: 11.5px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 1px 5px;
+  border-radius: 5px;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (max-width: 760px) {
+  .pred-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .pred-conf { grid-template-columns: auto minmax(0, 1fr) 60px; }
+  .score-row { grid-template-columns: minmax(0, 1fr) 72px 72px; }
+  .score-gap { display: none; }
+  .brand-sub { display: none; }
+  .bot-table { font-size: 12px; }
+  .bot-table td, .bot-table thead th { padding: 8px; }
+}
+

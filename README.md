@@ -49,7 +49,8 @@ Deux dés à six faces, somme de 2 à 12.
 
 - Tapis vert feutré, bordures or, trois zones de mise cliquables
 - **100 % manuel** : tu places la mise, tu cliques « Lancer les dés » ; rien ne relance
-  tout seul. Un bouton **« Démarrer le bot »** génère un tirage sans mise.
+  tout seul. Le **bot de prédiction** est sur une page séparée (`bot.html`) : il annonce
+  une issue, ne lance rien, et se note lui-même sur les résultats réels.
 - **Dés 3D isométriques** dessinés au canvas (faces, pips en dégradé, ombre portée),
   animation de lancer : rebonds, rotation, écrasement à l'impact, atterrissage
 - Jetons de mise ronds, historique des sommes coloré, « Effacer » / « Rejouer »
@@ -58,6 +59,8 @@ Deux dés à six faces, somme de 2 à 12.
   (dés, somme, issue, mise, gain/perte), KPI et histogramme des sommes comparé à la théorie
 - **Tableau d'affichage** : `/under-over-seven/board.html` — dernier tirage en très grand
   noté **−7 / 7 / +7**, compteurs et séries par issue, 40 derniers tirages
+- **Bot de prédiction** : `/under-over-seven/bot.html` — prédiction du prochain tirage,
+  confiance réelle, et auto-évaluation sur les tirages passés (il ne lance jamais les dés)
 
 ## Structure
 

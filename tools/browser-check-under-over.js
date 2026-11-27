@@ -225,22 +225,28 @@ function log(ok, label, detail) {
     fs.writeFileSync(path.join(__dirname, 'uo-board.png'), Buffer.from(shotBoard.result.data, 'base64'));
   }
 
-  console.log('\n--- Bot : tirage sans mise ---');
-  await send('Page.navigate', { url: PAGE });
+  console.log('\n--- Page du bot ---');
+  await send('Page.navigate', { url: PAGE + 'bot.html' });
   await sleep(900);
-  const beforeBot = await balanceOf();
-  await evaluate("document.querySelector('#bot-btn').click()");
-  await sleep(200);
-  const botPhase = await evaluate("document.querySelector('#phase-tag').textContent");
-  log(botPhase === 'Dés en jeu', 'bot : tirage lancé', botPhase);
-  const botDone = await waitFor("document.querySelector('#phase-tag').textContent==='Résultat'", 8000);
-  const botSum = await evaluate("document.querySelector('#sum-value').textContent");
-  log(botDone, 'bot : résultat affiché', botSum);
-  log(Number(botSum) >= 2 && Number(botSum) <= 12, 'bot : somme valide', botSum);
-  const botSub = await evaluate("document.querySelector('#bot-sub').textContent");
-  log(/tirage/.test(String(botSub)), 'compteur du bot', botSub);
-  const botBalance = await balanceOf();
-  log(Math.abs(botBalance - beforeBot) < 0.01, 'bot : solde intact', botBalance + ' (avant ' + beforeBot + ')');
+
+  const predSign = await evaluate("document.querySelector('#pred-sign').textContent");
+  const predConf = await evaluate("document.querySelector('#pred-conf').textContent");
+  const scoreRows = await evaluate("document.querySelectorAll('#scores .score-row').length");
+  log(['−7', '7', '+7'].indexOf(predSign) >= 0, 'prédiction affichée', predSign);
+  log(/41,67|16,67/.test(String(predConf)), 'confiance = probabilité réelle', predConf);
+  log(scoreRows === 4, 'les 4 stratégies sont notées', scoreRows);
+
+  await evaluate("(function(){var s=document.querySelector('#strategy');s.value='seven';s.dispatchEvent(new Event('change'));})()");
+  await sleep(250);
+  const botRows = await evaluate("document.querySelectorAll('#rows tr').length");
+  const firstMark = await evaluate("(document.querySelector('#rows .mark')||{}).textContent || ''");
+  log(botRows >= 1, 'prédictions évaluées', botRows + ' ligne(s)');
+  log(firstMark === '✓' || firstMark === '✗', 'verdict ✓/✗', firstMark);
+
+  const shotBot = await send('Page.captureScreenshot', { format: 'png' });
+  if (shotBot.result && shotBot.result.data) {
+    fs.writeFileSync(path.join(__dirname, 'uo-bot.png'), Buffer.from(shotBot.result.data, 'base64'));
+  }
 
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');

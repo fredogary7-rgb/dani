@@ -45,9 +45,6 @@
     stakeOver: $('#stake-over'),
     stakeTotal: $('#stake-total'),
     rollBtn: $('#roll-btn'),
-    botBtn: $('#bot-btn'),
-    botLabel: $('#bot-label'),
-    botSub: $('#bot-sub'),
     hint: $('#hint'),
     clearBtn: $('#clear-btn'),
     rebetBtn: $('#rebet-btn'),
@@ -93,8 +90,6 @@
     history: [],
     results: [],
     rounds: 0,
-    botDraws: 0,
-    botRoll: false,
     sound: true,
     rafId: 0,
     timerId: 0,
@@ -512,17 +507,6 @@
     ui.clearBtn.disabled = totalStake() === 0 || S.phase !== 'betting';
     ui.rebetBtn.disabled = !S.lastBets || S.phase !== 'betting';
     if (S.phase === 'betting') ui.rollBtn.disabled = totalStake() <= 0;
-    renderBot();
-  }
-
-  function renderBot() {
-    const busy = S.phase === 'rolling';
-    ui.botBtn.disabled = busy;
-    ui.botBtn.classList.toggle('is-busy', busy && S.botRoll);
-    ui.botLabel.textContent = busy && S.botRoll ? 'Bot en cours…' : 'Démarrer le bot';
-    ui.botSub.textContent = S.botDraws > 0
-      ? S.botDraws + (S.botDraws > 1 ? ' tirages générés' : ' tirage généré')
-      : 'génère un tirage sans mise';
   }
 
   function setPhase(phase) {
@@ -595,35 +579,21 @@
     setHint('Placez votre mise sur le tapis, puis cliquez sur « Lancer les dés ».');
   }
 
-  function startRoll(opts) {
-    const bot = !!(opts && opts.bot);
-    if (S.phase === 'rolling') return;
-
-    if (bot) {
-      // Le bot ne mélange pas les mises en cours : elles sont rendues.
-      const staked = totalStake();
-      if (staked > 0) {
-        setBalance(S.balance + staked);
-        S.bets = { under: 0, seven: 0, over: 0 };
-      }
-      S.botDraws += 1;
-    } else {
-      if (S.phase !== 'betting') return;
-      if (totalStake() <= 0) {
-        setHint('Placez une mise avant de lancer les dés — ou utilisez « Démarrer le bot ».', 'loss');
-        return;
-      }
-      S.lastBets = { under: S.bets.under, seven: S.bets.seven, over: S.bets.over };
+  function startRoll() {
+    if (S.phase !== 'betting') return;
+    if (totalStake() <= 0) {
+      setHint('Placez une mise avant de lancer les dés.', 'loss');
+      return;
     }
+    S.lastBets = { under: S.bets.under, seven: S.bets.seven, over: S.bets.over };
 
-    S.botRoll = bot;
     cancelAnimationFrame(S.rafId);
     ui.zones.forEach((el) => el.classList.remove('is-win', 'is-lose'));
     setPhase('rolling');
 
     ui.sumValue.textContent = '—';
     ui.sumValue.className = 'sum-value is-empty';
-    ui.sumOutcome.textContent = bot ? 'Le bot lance les dés…' : 'Les dés roulent…';
+    ui.sumOutcome.textContent = 'Les dés roulent…';
     ui.timer.textContent = '· · ·';
 
     S.d1 = d6();
@@ -662,7 +632,7 @@
     });
 
     if (staked === 0) {
-      setHint('Bot · tirage ' + S.botDraws + ' : ' + label + ' (somme ' + sum + ') — relancez le bot pour un nouveau tirage');
+      setHint('Aucune mise — ' + label + ' (somme ' + sum + ')');
     } else if (win > 0) {
       setHint('Gagné ' + money(win) + ' — net +' + money(win - staked), 'win');
       if (S.outcome === 'seven') Sound.seven(); else Sound.win();
@@ -736,11 +706,6 @@
       Sound.unlock();
       if (S.phase === 'betting') startRoll();
       else if (S.phase === 'result') startBetting();
-    });
-
-    ui.botBtn.addEventListener('click', () => {
-      Sound.unlock();
-      startRoll({ bot: true });
     });
 
     ui.clearBtn.addEventListener('click', clearBets);
