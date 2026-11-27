@@ -884,7 +884,6 @@
     S.phase = 'waiting';
     S.mult = 1;
     S.bet = null;
-    S.crashAt = drawCrashPoint();
     S.players = spawnPlayers();
 
     ui.stage.classList.remove('is-flying', 'is-crashed', 'is-win');
@@ -913,6 +912,9 @@
   }
 
   function startFlight() {
+    const planned = window.GameScript ? window.GameScript.next() : null;
+    S.crashAt = planned ? planned.value : drawCrashPoint();
+
     S.phase = 'flying';
     ui.stage.classList.add('is-flying');
     ui.status.textContent = 'En vol';
@@ -1043,8 +1045,9 @@
     ui.resetBtn.addEventListener('click', () => {
       setBalance(CFG.startBalance);
       S.history = [];
+      if (window.GameScript) window.GameScript.reset();
       renderHistory();
-      setHint('Solde fictif réinitialisé à ' + money(CFG.startBalance));
+      setHint('Solde fictif réinitialisé à ' + money(CFG.startBalance) + ' et programme remis à zéro');
     });
 
     document.addEventListener('keydown', (e) => {

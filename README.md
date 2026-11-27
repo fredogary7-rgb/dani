@@ -35,7 +35,9 @@ Une courbe monte, un avion file le long de la trajectoire, il faut encaisser ava
   orienté sur la tangente de la courbe, halo + traînée d'étincelles
 - **Explosion** au crash : flash, boule de feu, onde de choc, débris
 - Multiplicateur `m(t) = e^(0,07·t)`, retrait auto, historique, joueurs simulés, sons WebAudio
-- Math : `P(crash ≥ x) = 0,97 / x` → **RTP 97 %**, quel que soit le retrait choisi
+- Math : `P(crash ≥ x) = 0,97 / x` → **RTP 97 %** (modèle théorique ; ici les crashs sont **programmés**)
+- **Page bot** : `/crash/bot.html` — annonce le prochain crash exact (lu dans `script.js`)
+  et les 5 suivants ; le jeu consomme la même file au décollage
 
 ### 2. Under / Over 7 — `under-over-seven/`
 

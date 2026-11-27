@@ -194,6 +194,34 @@ function log(ok, label, detail) {
   const nextRound = await waitFor("document.querySelector('#phase-tag').textContent==='En attente'", 8000);
   log(nextRound, 'nouveau tour enchaîné');
 
+  console.log('\n--- Page bot du crash ---');
+  await send('Page.navigate', { url: PAGE + 'bot.html' });
+  await sleep(900);
+
+  const botValue = parseFloat(await evaluate("document.querySelector('#pred-value').textContent"));
+  const botPos = await evaluate("document.querySelector('#pred-pos').textContent");
+  const aheadPills = await evaluate("document.querySelectorAll('#ahead .ahead-pill').length");
+  log(botValue >= 1, 'crash programmé affiché', botValue + '×');
+  log(/programme n°\d+/.test(String(botPos)), 'position dans le programme', botPos);
+  log(aheadPills === 5, 'file à venir', aheadPills + ' pastilles');
+
+  // Le jeu doit crasher EXACTEMENT à la valeur annoncée
+  await send('Page.navigate', { url: PAGE });
+  await sleep(900);
+  await send('Page.bringToFront');
+  await waitFor("document.querySelector('#phase-tag').textContent==='En cours'", 15000);
+
+  let crashSeen = false;
+  for (let i = 0; i < 300 && !crashSeen; i++) {
+    crashSeen = await evaluate("document.querySelector('#phase-tag').textContent==='Crash'");
+    if (!crashSeen && i % 25 === 0) await send('Page.bringToFront');
+    if (!crashSeen) await sleep(120);
+  }
+  const crashText = await evaluate("document.querySelector('#stage-status').textContent");
+  const crashVal = parseFloat(String(crashText).replace(/[^\d.]/g, ''));
+  log(crashSeen && Math.abs(crashVal - botValue) < 0.011, 'le jeu crashe à la valeur annoncée',
+    crashVal + ' vs ' + botValue);
+
   console.log('\n--- Erreurs JavaScript ---');
   log(errors.length === 0, 'aucune erreur console', errors.join(' | ') || 'aucune');
 

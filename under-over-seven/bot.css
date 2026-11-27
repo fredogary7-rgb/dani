@@ -8,6 +8,9 @@
 
 .bot-app { max-width: 1180px; gap: 14px; }
 
+.topbar-right .ghost-btn { flex: 0 0 auto; white-space: nowrap; }
+.topbar-right .live-pill { flex: 0 0 auto; }
+
 .live-pill {
   font-size: 11px;
   font-weight: 700;

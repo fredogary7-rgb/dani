@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bot — Crash</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="bot.css">
+</head>
+<body class="bot-body">
+<div class="app bot-app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-badge">🤖 BOT</span>
+      <span class="brand-sub">crash · valeur programmée</span>
+    </div>
+    <div class="topbar-right">
+      <span class="live-pill" id="live">lecture du programme</span>
+      <a class="ghost-btn" href="index.html">← Jouer</a>
+    </div>
+  </header>
+
+  <section class="pred" id="pred">
+    <div class="pred-head">
+      <span class="pred-label">Prochain crash</span>
+      <span class="pred-badge" id="pred-pos">programme n°1</span>
+    </div>
+
+    <strong class="pred-value"><span id="pred-value">—</span><em>×</em></strong>
+    <span class="pred-detail" id="pred-detail">lecture du programme…</span>
+
+    <p class="pred-source">
+      Valeur lue dans la <strong>file programmée</strong> (<code>script.js</code>) : le prochain
+      vol crashera exactement à ce multiplicateur.
+    </p>
+  </section>
+
+  <section class="ahead-block">
+    <div class="ahead-head">
+      <h2>Crashs programmés à venir</h2>
+      <span id="ahead-count">—</span>
+    </div>
+    <div class="ahead" id="ahead"></div>
+  </section>
+
+  <footer class="footer">
+    Démo technique — argent fictif, tirages programmés. Aucune transaction réelle,
+    aucun lien avec un opérateur.
+  </footer>
+</div>
+<script src="script.js"></script>
+<script src="bot.js"></script>
+</body>
+</html>
