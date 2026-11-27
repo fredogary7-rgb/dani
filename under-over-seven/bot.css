@@ -32,8 +32,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 18px 20px 20px;
+  min-height: 420px;
+  padding: 18px 20px 24px;
   border-radius: 20px;
   background: linear-gradient(180deg, #14131c, #0b0a11);
   border: 1px solid rgba(162, 116, 255, 0.3);

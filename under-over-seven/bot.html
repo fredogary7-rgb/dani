@@ -47,58 +47,14 @@
     </div>
 
     <p class="pred-note">
-      Cette « confiance » est la <strong>probabilité réelle</strong> de l'issue annoncée
-      (41,67 % pour −7 ou +7, 16,67 % pour le 7). C'est le maximum mathématique :
-      aucun bot ne peut annoncer mieux.
+      La confiance affichée est la <strong>probabilité réelle</strong> de l'issue annoncée
+      (41,67 % pour −7 ou +7, 16,67 % pour le 7).
     </p>
   </section>
 
-  <!-- ---------------- Score du bot ---------------- -->
-  <section class="block">
-    <div class="block-head">
-      <h2>Score du bot — test à l'aveugle sur les tirages réels</h2>
-      <span class="block-sub" id="score-sub">0 tirage évalué</span>
-    </div>
-    <div class="scores" id="scores"></div>
-  </section>
-
-  <!-- ---------------- Prédictions vs résultats ---------------- -->
-  <section class="block">
-    <div class="block-head">
-      <h2>Prédictions vs résultats réels</h2>
-      <span class="block-sub">15 derniers tirages</span>
-    </div>
-    <div class="table-wrap" id="wrap">
-      <table class="bot-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Heure</th>
-            <th>Prédiction du bot</th>
-            <th>Résultat réel</th>
-            <th>Somme</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="rows"></tbody>
-      </table>
-      <div class="empty" id="empty">
-        <p><strong>Aucun tirage à évaluer pour l'instant.</strong></p>
-        <p>Joue quelques manches : le bot se notera lui-même sur les résultats réels.</p>
-        <a class="cta" href="index.html">Jouer une manche →</a>
-      </div>
-    </div>
-  </section>
-
-  <p class="disclaimer">
-    ⚠️ <strong>Ce bot ne lit pas l'avenir.</strong> Chaque manche est tirée indépendamment
-    (<code>crypto.getRandomValues</code>) : aucun historique ne permet de deviner le tirage suivant.
-    Les scores affichés convergent vers 41,7 % (ou 16,7 % s'il annonce le 7), soit une espérance
-    de −16,7 % par mise. Un bot qui promet 80–90 % de réussite ment.
-  </p>
-
   <footer class="footer">
-    Démo technique — argent fictif, aucune transaction réelle, aucun lien avec un opérateur.
+    Démo technique — argent fictif, prédiction statistique. Aucune transaction réelle,
+    aucun lien avec un opérateur.
   </footer>
 </div>
 <script src="bot.js"></script>

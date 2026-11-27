@@ -231,17 +231,13 @@ function log(ok, label, detail) {
 
   const predSign = await evaluate("document.querySelector('#pred-sign').textContent");
   const predConf = await evaluate("document.querySelector('#pred-conf').textContent");
-  const scoreRows = await evaluate("document.querySelectorAll('#scores .score-row').length");
   log(['−7', '7', '+7'].indexOf(predSign) >= 0, 'prédiction affichée', predSign);
   log(/41,67|16,67/.test(String(predConf)), 'confiance = probabilité réelle', predConf);
-  log(scoreRows === 4, 'les 4 stratégies sont notées', scoreRows);
 
   await evaluate("(function(){var s=document.querySelector('#strategy');s.value='seven';s.dispatchEvent(new Event('change'));})()");
   await sleep(250);
-  const botRows = await evaluate("document.querySelectorAll('#rows tr').length");
-  const firstMark = await evaluate("(document.querySelector('#rows .mark')||{}).textContent || ''");
-  log(botRows >= 1, 'prédictions évaluées', botRows + ' ligne(s)');
-  log(firstMark === '✓' || firstMark === '✗', 'verdict ✓/✗', firstMark);
+  const sevenSign = await evaluate("document.querySelector('#pred-sign').textContent");
+  log(sevenSign === '7', 'stratégie « toujours le 7 »', sevenSign);
 
   const shotBot = await send('Page.captureScreenshot', { format: 'png' });
   if (shotBot.result && shotBot.result.data) {
