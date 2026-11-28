@@ -1,16 +1,18 @@
 /*
  * Page bot du Crash.
  *
- * Affiche le multiplicateur de crash du PROCHAIN vol, lu dans la file programmée
- * (script.js). Le jeu consomme la même file au décollage : la valeur annoncée ici est
- * exactement celle à laquelle le vol va crasher.
+ * 1) Si le serveur de démo répond (/api/crash) : le bot affiche la manche en cours telle
+ *    qu'elle tourne côté serveur — même si la page du jeu est fermée, et depuis un autre
+ *    appareil du réseau (mêmes tours, mêmes valeurs).
+ * 2) Sinon (fichier ouvert sans serveur) : il lit la file locale via GameScript.
  */
 (() => {
   'use strict';
 
+  const API = '/api/crash';
   const SCRIPT_KEY = 'crash-script-v1';
-  const id = (x) => document.getElementById(x);
 
+  const id = (x) => document.getElementById(x);
   const el = {
     live: id('live'),
     pred: id('pred'),
@@ -22,6 +24,7 @@
   };
 
   const fmt = (v) => Number(v).toFixed(2);
+  let timer = 0;
 
   function label(v) {
     if (v < 1.5) return 'crash quasi immédiat';
@@ -31,30 +34,20 @@
     return 'gros multiplicateur';
   }
 
-  function render() {
-    if (!window.GameScript) {
-      el.value.textContent = '—';
-      el.detail.textContent = 'programme indisponible';
-      el.ahead.textContent = '';
-      return;
-    }
+  function setValue(v) {
+    el.value.textContent = fmt(v);
+    el.pred.classList.toggle('is-hot', v >= 10);
+  }
 
-    const next = window.GameScript.peek();
-    el.value.textContent = fmt(next.value);
-    el.detail.textContent = label(next.value) + ' · ' + fmt(next.value) + '×';
-    el.pos.textContent = 'programme n°' + next.position + ' / ' + next.total;
-    el.pred.classList.toggle('is-hot', next.value >= 10);
-
-    const list = window.GameScript.ahead(5);
+  function renderAhead(list) {
     el.ahead.textContent = '';
     for (let i = 0; i < list.length; i++) {
-      const item = list[i];
       const pill = document.createElement('span');
-      pill.className = 'ahead-pill' + (item.value >= 10 ? ' is-hot' : '') + (i === 0 ? ' is-first' : '');
-      pill.textContent = fmt(item.value) + '×';
+      pill.className = 'ahead-pill' + (list[i].value >= 10 ? ' is-hot' : '') + (i === 0 ? ' is-first' : '');
+      pill.textContent = fmt(list[i].value) + '×';
 
       const small = document.createElement('small');
-      small.textContent = 'n°' + item.position;
+      small.textContent = 'n°' + list[i].pos;
       pill.appendChild(small);
 
       el.ahead.appendChild(pill);
@@ -62,13 +55,66 @@
     el.count.textContent = list.length + ' valeurs';
   }
 
-  document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) render();
-  });
+  // ---------- Mode serveur ----------
+  function renderServer(data) {
+    const r = data.round;
+    const total = data.total || 500;
+    const crashed = r.phase === 'crashed';
+    const target = crashed && data.next && data.next.length
+      ? data.next[0]
+      : { value: r.crashAt, pos: r.pos };
+
+    setValue(target.value);
+    el.pos.textContent = 'tour n°' + r.n + ' · programme n°' + target.pos + ' / ' + total;
+
+    if (r.phase === 'waiting') {
+      const left = Math.max(0, (r.endsAt - data.serverTime) / 1000);
+      el.detail.textContent = label(target.value) + ' · mise ouverte · ' + left.toFixed(1) + ' s';
+      el.live.textContent = 'en direct';
+    } else if (r.phase === 'flying') {
+      el.detail.textContent = 'en vol · ' + fmt(r.mult) + '× → crash à ' + fmt(r.crashAt) + '×';
+      el.live.textContent = 'en vol';
+    } else {
+      el.detail.textContent = 'crashé à ' + fmt(r.crashAt) + '× · prochaine manche dans ' +
+        Math.max(0, (r.endsAt - data.serverTime) / 1000).toFixed(1) + ' s';
+      el.live.textContent = 'nouvelle manche';
+    }
+
+    renderAhead(data.next || []);
+  }
+
+  // ---------- Mode local (sans serveur) ----------
+  function renderLocal() {
+    if (!window.GameScript) {
+      el.value.textContent = '—';
+      el.detail.textContent = 'programme indisponible';
+      el.ahead.textContent = '';
+      return;
+    }
+    const next = window.GameScript.peek();
+    setValue(next.value);
+    el.detail.textContent = label(next.value) + ' · ' + fmt(next.value) + '×';
+    el.pos.textContent = 'programme n°' + next.position + ' / ' + next.total;
+    el.live.textContent = 'hors serveur';
+    renderAhead(window.GameScript.ahead(5).map((x) => ({ value: x.value, pos: x.position })));
+  }
+
+  async function poll() {
+    try {
+      const res = await fetch(API, { cache: 'no-store' });
+      if (!res.ok) throw new Error('http ' + res.status);
+      const data = await res.json();
+      if (!data || !data.round) throw new Error('payload');
+      renderServer(data);
+    } catch (err) {
+      renderLocal();
+    }
+    timer = setTimeout(poll, 700);
+  }
+
   window.addEventListener('storage', (e) => {
-    if (e.key === SCRIPT_KEY) render();
+    if (e.key === SCRIPT_KEY) renderLocal();
   });
 
-  render();
-  setInterval(() => { if (!document.hidden) render(); }, 700);
+  poll();
 })();

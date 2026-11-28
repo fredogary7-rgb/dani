@@ -1060,8 +1060,154 @@
     });
   }
 
+  // ---------- Mode serveur : manches continues, partagées entre appareils ----------
+  const Remote = (() => {
+    const API = '/api/crash';
+    let on = false;
+    let pollId = 0;
+    let rafId = 0;
+    let offset = 0;
+    let snap = null;
+    let lastKey = '';
+
+    const serverNow = () => Date.now() + offset;
+
+    function onWaiting(r) {
+      S.phase = 'waiting';
+      S.mult = 1;
+      S.bet = null;
+      S.players = spawnPlayers();
+      ui.stage.classList.remove('is-flying', 'is-crashed', 'is-win');
+      updateMultiplierLabel(1);
+      Graph.reset();
+      ui.status.textContent = 'Prochain tour…';
+      ui.phaseTag.textContent = 'En attente';
+      ui.phaseTag.className = 'phase-tag';
+      ui.progress.style.width = '0%';
+      renderPlayers();
+      renderAction();
+      setHint('Tour n°' + r.n + ' — placez votre mise');
+    }
+
+    function onFlying(r) {
+      S.phase = 'flying';
+      ui.stage.classList.add('is-flying');
+      ui.status.textContent = 'En vol';
+      ui.phaseTag.textContent = 'En cours';
+      ui.phaseTag.className = 'phase-tag is-flying';
+      renderAction();
+    }
+
+    function onCrashed(r) {
+      S.phase = 'crashed';
+      S.mult = r.crashAt;
+      updateMultiplierLabel(r.crashAt);
+      ui.stage.classList.remove('is-flying');
+      ui.stage.classList.add('is-crashed');
+      ui.status.textContent = 'Crashé à ' + mult(r.crashAt);
+      ui.phaseTag.textContent = 'Crash';
+      ui.phaseTag.className = 'phase-tag is-crashed';
+      ui.progress.style.width = '100%';
+      Graph.render(crashTime(r.crashAt), r.crashAt, false);
+      Graph.markCrash(crashTime(r.crashAt));
+      Graph.explode();
+      settlePlayers();
+      Sound.crash();
+
+      if (S.bet && !S.bet.cashedOut) {
+        setHint('Perdu ' + money(S.bet.amount) + ' — crash à ' + mult(r.crashAt), 'loss');
+        Sound.lose();
+      }
+      S.bet = null;
+
+      S.history.unshift(r.crashAt);
+      if (S.history.length > CFG.maxHistory) S.history.length = CFG.maxHistory;
+      renderHistory();
+      renderAction();
+    }
+
+    function frame() {
+      if (!on || !snap) return;
+      const r = snap.round;
+
+      if (r.phase === 'waiting' && S.phase === 'waiting') {
+        const total = (snap.waitMs || 6000) / 1000;
+        const left = Math.max(0, (r.endsAt - serverNow()) / 1000);
+        ui.progress.style.width = (Math.min(100, ((total - left) / total) * 100)).toFixed(1) + '%';
+        ui.footLeft.textContent = 'Départ dans ' + left.toFixed(1) + 's';
+      }
+
+      if (r.phase === 'flying' && S.phase === 'flying') {
+        const t = Math.max(0, (serverNow() - r.startedAt) / 1000);
+        const m = Math.min(r.crashAt, Math.exp(CFG.growth * t));
+        S.mult = m;
+        updateMultiplierLabel(m);
+        Graph.render(t, m, false);
+        updatePlayers(m);
+        ui.footLeft.textContent = 'Temps de vol : ' + t.toFixed(1) + 's';
+        if (S.bet && !S.bet.cashedOut) {
+          renderCashout();
+          if (S.bet.auto > 1 && m >= S.bet.auto) cashOut('auto', S.bet.auto);
+        }
+      }
+
+      rafId = requestAnimationFrame(frame);
+    }
+
+    async function poll() {
+      try {
+        const res = await fetch(API, { cache: 'no-store' });
+        if (!res.ok) throw new Error('http ' + res.status);
+        const data = await res.json();
+        offset = data.serverTime - Date.now();
+        snap = data;
+
+        const r = data.round;
+        const key = r.n + ':' + r.phase;
+        if (key !== lastKey) {
+          lastKey = key;
+          if (r.phase === 'waiting') onWaiting(r);
+          else if (r.phase === 'flying') onFlying(r);
+          else onCrashed(r);
+        }
+      } catch (err) { /* on garde le dernier état connu */ }
+      pollId = setTimeout(poll, 250);
+    }
+
+    return {
+      async start() {
+        try {
+          const res = await fetch(API, { cache: 'no-store' });
+          if (!res.ok) return false;
+          const data = await res.json();
+          if (!data || !data.round) return false;
+
+          on = true;
+          snap = data;
+          offset = data.serverTime - Date.now();
+          lastKey = data.round.n + ':' + data.round.phase;
+
+          if (data.round.phase === 'crashed') {
+            onWaiting(data.round);
+            onCrashed(data.round);
+          } else {
+            onWaiting(data.round);
+            if (data.round.phase === 'flying') onFlying(data.round);
+          }
+
+          rafId = requestAnimationFrame(frame);
+          pollId = setTimeout(poll, 250);
+          setHint('Mode serveur : les manches tournent en continu, visibles sur tous les appareils');
+          return true;
+        } catch (err) {
+          return false;
+        }
+      },
+    };
+  })();
+
   // ---------- Démarrage ----------
-  function init() {
+  async function init() {
     ui.actionBtn.innerHTML = '<span id="action-main">Parier</span><small id="action-sub"></small>';
     ui.multiplier.innerHTML = '<em>1.00</em><span>×</span>';
     actionMain = document.getElementById('action-main');
@@ -1096,6 +1242,9 @@
       renderAction();
       return;
     }
+
+    // Si le serveur répond, les manches viennent de l'API (continues, partagées)
+    if (await Remote.start()) return;
 
     startWaiting();
   }

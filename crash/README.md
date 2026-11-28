@@ -39,6 +39,30 @@ const PROGRAM = [
 - Après `PROGRAM`, la suite continue de façon déterministe (graine fixe, 500 valeurs).
 - Le bouton ↺ du jeu remet le solde **et** le programme à zéro.
 
+## Mode serveur : les tours tournent tout seuls (et sur un autre appareil)
+
+```bash
+node tools/server.js 8080
+```
+
+- Les manches s'enchaînent **côté serveur** (6 s de mise → vol → crash → 2,8 s → suivante),
+  même si aucune page n'est ouverte.
+- `GET /api/crash` renvoie l'état de la manche (`waiting` / `flying` / `crashed`), le crash
+  programmé, la position dans la file et les 5 valeurs suivantes.
+- La page du jeu **se synchronise** sur cette API (elle affiche le tour en cours, quel que
+  soit le moment où tu ouvres la page).
+- La page bot lit la même API : sur un **autre appareil du réseau**, elle voit les mêmes
+  manches et la même valeur programmée.
+
+```
+PC        : http://localhost:8080/crash/
+Téléphone : http://<ip-du-pc>:8080/crash/bot.html   (même Wi-Fi, pare-feu autorisé)
+```
+
+Sans serveur (`tools/serve.js` ou fichier ouvert directement), le jeu retombe sur son
+programme local (`script.js`) : tout fonctionne, mais les manches ne tournent que lorsque
+la page est ouverte et le bot ne voit que le `localStorage` de son appareil.
+
 Aucune stratégie (Martingale, montants progressifs, « prédicteurs ») ne change cette
 espérance : elle ne modifie que la variance.
 

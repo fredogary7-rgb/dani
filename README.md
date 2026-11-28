@@ -14,15 +14,35 @@ un **Crash** (courbe + avion) et un **Under / Over 7** (deux dés).
 ## Lancer
 
 ```bash
-# option 1 : serveur fourni (aucune dépendance)
-node tools/serve.js 8080      # puis http://localhost:8080
+# option 1 : serveur de démo (manches Crash continues + accès depuis un autre appareil)
+node tools/server.js 8080     # puis http://localhost:8080
 
-# option 2 : python
+# option 2 : simple serveur statique (les jeux tournent en local, sans API)
+node tools/serve.js 8080
+
+# option 3 : python
 python -m http.server 8080
 ```
 
-`index.html` s'ouvre aussi directement en double-clic (le serveur est juste plus confortable
-pour tester les deux jeux et le hub).
+### Mode serveur : manches continues, bot sur un autre appareil
+
+`tools/server.js` fait deux choses de plus qu'un simple serveur de fichiers :
+
+1. **Il fait tourner les manches Crash en continu** (6 s de mise → vol → crash → 2,8 s →
+   manche suivante), même si aucune page n'est ouverte.
+2. **Il expose `GET /api/crash`** avec l'état de la manche en cours, le crash programmé et
+   les 5 valeurs suivantes. La page du jeu s'y synchronise, et la page bot aussi —
+   **depuis n'importe quel appareil du réseau**.
+
+```bash
+node tools/server.js 8080
+# Serveur de démo : http://localhost:8080
+#   autre appareil : http://192.168.x.x:8080/crash/   (bot : /crash/bot.html)
+```
+
+- PC : `http://localhost:8080/crash/`
+- Téléphone (même Wi-Fi) : `http://<ip-affichée>:8080/crash/bot.html`
+- Autorise Node dans le pare-feu Windows si demandé.
 
 ## Les deux jeux
 
@@ -68,10 +88,13 @@ Deux dés à six faces, somme de 2 à 12.
 
 ```
 index.html                    hub (choix du jeu)
-crash/                        jeu 1 : index.html, style.css, game.js
+crash/                        jeu 1 : index.html, style.css, game.js,
+                              script.js (programme local), program.json (programme serveur),
+                              bot.html / bot.css / bot.js (bot)
 under-over-seven/             jeu 2 : index.html, style.css, game.js,
                               results.html / results.css / results.js (journal des tours)
-tools/serve.js                serveur statique local (port 8080)
+tools/server.js               serveur de démo : manches Crash continues + API /api/crash
+tools/serve.js                serveur statique local (sans API)
 tools/rtp-crash.js            simulation 1 M de tours → RTP du Crash
 tools/rtp-under-over.js       simulation 1 M de lancers → distribution + RTP des dés
 tools/browser-check-crash.js  test fonctionnel réel du Crash (Edge headless + CDP)
