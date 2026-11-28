@@ -18,7 +18,6 @@
     pred: id('pred'),
     value: id('pred-value'),
     detail: id('pred-detail'),
-    pos: id('pred-pos'),
     ahead: id('ahead'),
     count: id('ahead-count'),
   };
@@ -58,14 +57,12 @@
   // ---------- Mode serveur ----------
   function renderServer(data) {
     const r = data.round;
-    const total = data.total || 500;
     const crashed = r.phase === 'crashed';
     const target = crashed && data.next && data.next.length
       ? data.next[0]
       : { value: r.crashAt, pos: r.pos };
 
     setValue(target.value);
-    el.pos.textContent = 'tour n°' + r.n + ' · programme n°' + target.pos + ' / ' + total;
 
     if (r.phase === 'waiting') {
       const left = Math.max(0, (r.endsAt - data.serverTime) / 1000);
@@ -94,7 +91,6 @@
     const next = window.GameScript.peek();
     setValue(next.value);
     el.detail.textContent = label(next.value) + ' · ' + fmt(next.value) + '×';
-    el.pos.textContent = 'programme n°' + next.position + ' / ' + next.total;
     el.live.textContent = 'hors serveur';
     renderAhead(window.GameScript.ahead(5).map((x) => ({ value: x.value, pos: x.position })));
   }

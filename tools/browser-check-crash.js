@@ -199,10 +199,8 @@ function log(ok, label, detail) {
   await sleep(900);
 
   const botValue = parseFloat(await evaluate("document.querySelector('#pred-value').textContent"));
-  const botPos = await evaluate("document.querySelector('#pred-pos').textContent");
   const aheadPills = await evaluate("document.querySelectorAll('#ahead .ahead-pill').length");
   log(botValue >= 1, 'crash programmé affiché', botValue + '×');
-  log(/programme n°\d+/.test(String(botPos)), 'position dans le programme', botPos);
   log(aheadPills === 5, 'file à venir', aheadPills + ' pastilles');
 
   // Le jeu doit crasher EXACTEMENT à la valeur annoncée
